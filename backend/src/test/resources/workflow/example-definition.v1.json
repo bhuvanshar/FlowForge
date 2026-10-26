@@ -1,0 +1,46 @@
+{
+  "schemaVersion": 1,
+  "nodes": [
+    {
+      "id": "trigger",
+      "type": "core.manualTrigger",
+      "typeVersion": 1,
+      "name": "Manual trigger",
+      "position": { "x": 0, "y": 0 },
+      "configuration": {}
+    },
+    {
+      "id": "check",
+      "type": "core.if",
+      "typeVersion": 1,
+      "name": "Is large order?",
+      "position": { "x": 240, "y": 0 },
+      "configuration": {
+        "condition": { "left": "order.total", "operator": "gt", "right": 100 },
+        "note": null
+      }
+    },
+    {
+      "id": "notify",
+      "type": "core.noOp",
+      "typeVersion": 1,
+      "name": "Large order",
+      "position": { "x": 480, "y": -80.5 },
+      "configuration": {}
+    },
+    {
+      "id": "ignore",
+      "type": "core.noOp",
+      "typeVersion": 1,
+      "name": "Small order",
+      "position": { "x": 480, "y": 80.5 },
+      "configuration": {}
+    }
+  ],
+  "edges": [
+    { "id": "e1", "source": "trigger", "sourceHandle": "main", "target": "check", "targetHandle": "main" },
+    { "id": "e2", "source": "check", "sourceHandle": "true", "target": "notify", "targetHandle": "main" },
+    { "id": "e3", "source": "check", "sourceHandle": "false", "target": "ignore", "targetHandle": "main" }
+  ],
+  "editor": { "viewport": { "x": 0, "y": 0, "zoom": 1 } }
+}

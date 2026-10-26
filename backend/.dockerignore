@@ -1,0 +1,7 @@
+# Only the build inputs go into the image build context.
+target/
+.mvn/wrapper/maven-wrapper.jar
+*.log
+.idea/
+.vscode/
+.DS_Store

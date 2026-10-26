@@ -1,0 +1,93 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://flowforge.local/schemas/workflow-definition.v1.json",
+  "title": "FlowForge workflow definition, schema version 1",
+  "description": "Canonical JSON graph stored in workflows.definition and workflow_executions.workflow_snapshot. Mirrors com.flowforge.domain.workflow.WorkflowDefinition and frontend/src/lib/workflow/definition.ts.",
+  "type": "object",
+  "required": ["schemaVersion", "nodes", "edges"],
+  "additionalProperties": false,
+  "properties": {
+    "schemaVersion": { "const": 1 },
+    "nodes": {
+      "type": "array",
+      "maxItems": 500,
+      "items": { "$ref": "#/$defs/node" }
+    },
+    "edges": {
+      "type": "array",
+      "maxItems": 2000,
+      "items": { "$ref": "#/$defs/edge" }
+    },
+    "editor": { "$ref": "#/$defs/editor" }
+  },
+  "$defs": {
+    "id": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9_-]{1,64}$"
+    },
+    "handle": {
+      "type": "string",
+      "pattern": "^[A-Za-z][A-Za-z0-9_-]{0,63}$"
+    },
+    "coordinate": {
+      "type": "number",
+      "minimum": -1000000,
+      "maximum": 1000000
+    },
+    "node": {
+      "type": "object",
+      "required": ["id", "type", "typeVersion", "name", "position", "configuration"],
+      "additionalProperties": false,
+      "properties": {
+        "id": { "$ref": "#/$defs/id" },
+        "type": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9]*(\\.[a-z][A-Za-z0-9]*)+$"
+        },
+        "typeVersion": { "type": "integer", "minimum": 1 },
+        "name": { "type": "string", "minLength": 1, "maxLength": 100 },
+        "position": {
+          "type": "object",
+          "required": ["x", "y"],
+          "additionalProperties": false,
+          "properties": {
+            "x": { "$ref": "#/$defs/coordinate" },
+            "y": { "$ref": "#/$defs/coordinate" }
+          }
+        },
+        "configuration": {
+          "type": "object",
+          "description": "Node-type specific settings. Validated against the node type's own configuration schema."
+        }
+      }
+    },
+    "edge": {
+      "type": "object",
+      "required": ["id", "source", "sourceHandle", "target", "targetHandle"],
+      "additionalProperties": false,
+      "properties": {
+        "id": { "$ref": "#/$defs/id" },
+        "source": { "$ref": "#/$defs/id" },
+        "sourceHandle": { "$ref": "#/$defs/handle" },
+        "target": { "$ref": "#/$defs/id" },
+        "targetHandle": { "$ref": "#/$defs/handle" }
+      }
+    },
+    "editor": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "viewport": {
+          "type": "object",
+          "required": ["x", "y", "zoom"],
+          "additionalProperties": false,
+          "properties": {
+            "x": { "type": "number" },
+            "y": { "type": "number" },
+            "zoom": { "type": "number", "minimum": 0.05, "maximum": 10 }
+          }
+        }
+      }
+    }
+  }
+}

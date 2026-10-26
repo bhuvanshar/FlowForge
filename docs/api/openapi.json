@@ -1,0 +1,3179 @@
+{
+  "components" : {
+    "schemas" : {
+      "Ai" : {
+        "properties" : {
+          "maxPromptChars" : {
+            "format" : "int32",
+            "type" : "integer"
+          },
+          "maxResponseBytes" : {
+            "format" : "int32",
+            "type" : "integer"
+          }
+        },
+        "type" : "object"
+      },
+      "Application" : {
+        "properties" : {
+          "version" : {
+            "type" : "string"
+          }
+        },
+        "type" : "object"
+      },
+      "Create" : {
+        "properties" : {
+          "allowedHosts" : {
+            "items" : {
+              "type" : "string"
+            },
+            "maxItems" : 20,
+            "minItems" : 0,
+            "type" : "array"
+          },
+          "description" : {
+            "type" : "string"
+          },
+          "fields" : {
+            "additionalProperties" : {
+              "type" : "string"
+            },
+            "type" : "object"
+          },
+          "name" : {
+            "type" : "string"
+          },
+          "secret" : {
+            "additionalProperties" : {
+              "type" : "string"
+            },
+            "type" : "object"
+          },
+          "type" : {
+            "maxLength" : 40,
+            "minLength" : 0,
+            "type" : "string"
+          }
+        },
+        "required" : [ "allowedHosts", "name", "secret", "type" ],
+        "type" : "object"
+      },
+      "CreateSampleRequest" : {
+        "properties" : {
+          "credentialId" : {
+            "maxLength" : 36,
+            "minLength" : 0,
+            "type" : "string"
+          }
+        },
+        "type" : "object"
+      },
+      "CreateWorkflowRequest" : {
+        "properties" : {
+          "definition" : {
+            "$ref" : "#/components/schemas/WorkflowDefinition",
+            "description" : "Optional. Defaults to an empty definition at the current schema version."
+          },
+          "description" : {
+            "maxLength" : 2000,
+            "minLength" : 0,
+            "type" : "string"
+          },
+          "name" : {
+            "maxLength" : 200,
+            "minLength" : 0,
+            "type" : "string"
+          }
+        },
+        "required" : [ "name" ],
+        "type" : "object"
+      },
+      "CredentialResponse" : {
+        "properties" : {
+          "allowedHosts" : {
+            "items" : {
+              "type" : "string"
+            },
+            "type" : "array"
+          },
+          "createdAt" : {
+            "format" : "date-time",
+            "type" : "string"
+          },
+          "description" : {
+            "type" : "string"
+          },
+          "fields" : {
+            "additionalProperties" : {
+              "type" : "string"
+            },
+            "type" : "object"
+          },
+          "id" : {
+            "format" : "uuid",
+            "type" : "string"
+          },
+          "lastUsedAt" : {
+            "format" : "date-time",
+            "type" : "string"
+          },
+          "lockVersion" : {
+            "format" : "int64",
+            "type" : "integer"
+          },
+          "name" : {
+            "type" : "string"
+          },
+          "rotatedAt" : {
+            "format" : "date-time",
+            "type" : "string"
+          },
+          "secretFields" : {
+            "items" : {
+              "type" : "string"
+            },
+            "type" : "array"
+          },
+          "secretVersion" : {
+            "format" : "int32",
+            "type" : "integer"
+          },
+          "type" : {
+            "type" : "string"
+          },
+          "updatedAt" : {
+            "format" : "date-time",
+            "type" : "string"
+          }
+        },
+        "type" : "object"
+      },
+      "Credentials" : {
+        "properties" : {
+          "activeKeyId" : {
+            "type" : "string"
+          },
+          "encryptionAvailable" : {
+            "type" : "boolean"
+          },
+          "keyCount" : {
+            "format" : "int32",
+            "type" : "integer"
+          }
+        },
+        "type" : "object"
+      },
+      "DuplicateWorkflowRequest" : {
+        "properties" : {
+          "name" : {
+            "description" : "Optional. Defaults to '<original name> (copy)'.",
+            "maxLength" : 200,
+            "minLength" : 0,
+            "type" : "string"
+          }
+        },
+        "type" : "object"
+      },
+      "EdgeDefinition" : {
+        "properties" : {
+          "id" : {
+            "minLength" : 1,
+            "pattern" : "^[A-Za-z0-9_-]{1,64}$",
+            "type" : "string"
+          },
+          "source" : {
+            "minLength" : 1,
+            "pattern" : "^[A-Za-z0-9_-]{1,64}$",
+            "type" : "string"
+          },
+          "sourceHandle" : {
+            "minLength" : 1,
+            "pattern" : "^[A-Za-z][A-Za-z0-9_-]{0,63}$",
+            "type" : "string"
+          },
+          "target" : {
+            "minLength" : 1,
+            "pattern" : "^[A-Za-z0-9_-]{1,64}$",
+            "type" : "string"
+          },
+          "targetHandle" : {
+            "minLength" : 1,
+            "pattern" : "^[A-Za-z][A-Za-z0-9_-]{0,63}$",
+            "type" : "string"
+          }
+        },
+        "required" : [ "id", "source", "sourceHandle", "target", "targetHandle" ],
+        "type" : "object"
+      },
+      "EditorMetadata" : {
+        "properties" : {
+          "viewport" : {
+            "$ref" : "#/components/schemas/Viewport"
+          }
+        },
+        "type" : "object"
+      },
+      "EncryptionStatus" : {
+        "properties" : {
+          "activeKeyId" : {
+            "type" : "string"
+          },
+          "available" : {
+            "type" : "boolean"
+          },
+          "credentialsOnOldKeys" : {
+            "format" : "int64",
+            "type" : "integer"
+          },
+          "webhookSecretsToEncrypt" : {
+            "format" : "int64",
+            "type" : "integer"
+          }
+        },
+        "type" : "object"
+      },
+      "Error" : {
+        "properties" : {
+          "code" : {
+            "type" : "string"
+          },
+          "message" : {
+            "type" : "string"
+          }
+        },
+        "type" : "object"
+      },
+      "ExecuteWorkflowRequest" : {
+        "properties" : {
+          "input" : {
+            "$ref" : "#/components/schemas/JsonNode",
+            "description" : "Trigger input (any JSON). Omit to use the trigger's configured test input, or {}."
+          }
+        },
+        "type" : "object"
+      },
+      "Execution" : {
+        "properties" : {
+          "maxActivePerWorkflow" : {
+            "format" : "int32",
+            "type" : "integer"
+          },
+          "maxDurationSeconds" : {
+            "format" : "int64",
+            "type" : "integer"
+          },
+          "maxStoredPayloadBytes" : {
+            "format" : "int32",
+            "type" : "integer"
+          },
+          "nodeTimeoutSeconds" : {
+            "format" : "int64",
+            "type" : "integer"
+          },
+          "queueCapacity" : {
+            "format" : "int32",
+            "type" : "integer"
+          },
+          "workerThreads" : {
+            "format" : "int32",
+            "type" : "integer"
+          }
+        },
+        "type" : "object"
+      },
+      "ExecutionNodesResponse" : {
+        "properties" : {
+          "executionId" : {
+            "format" : "uuid",
+            "type" : "string"
+          },
+          "nodes" : {
+            "items" : {
+              "$ref" : "#/components/schemas/NodeRun"
+            },
+            "type" : "array"
+          }
+        },
+        "type" : "object"
+      },
+      "ExecutionResponse" : {
+        "properties" : {
+          "createdAt" : {
+            "format" : "date-time",
+            "type" : "string"
+          },
+          "durationMs" : {
+            "format" : "int64",
+            "type" : "integer"
+          },
+          "error" : {
+            "$ref" : "#/components/schemas/Error"
+          },
+          "finishedAt" : {
+            "format" : "date-time",
+            "type" : "string"
+          },
+          "id" : {
+            "format" : "uuid",
+            "type" : "string"
+          },
+          "logs" : {
+            "items" : {
+              "$ref" : "#/components/schemas/LogLine"
+            },
+            "type" : "array"
+          },
+          "nodes" : {
+            "items" : {
+              "$ref" : "#/components/schemas/NodeRun"
+            },
+            "type" : "array"
+          },
+          "scheduledFor" : {
+            "format" : "date-time",
+            "type" : "string"
+          },
+          "startedAt" : {
+            "format" : "date-time",
+            "type" : "string"
+          },
+          "status" : {
+            "enum" : [ "QUEUED", "RUNNING", "SUCCEEDED", "FAILED", "CANCELLED" ],
+            "type" : "string"
+          },
+          "triggerType" : {
+            "enum" : [ "MANUAL", "WEBHOOK", "SCHEDULE" ],
+            "type" : "string"
+          },
+          "workflowId" : {
+            "format" : "uuid",
+            "type" : "string"
+          },
+          "workflowVersion" : {
+            "format" : "int32",
+            "type" : "integer"
+          }
+        },
+        "type" : "object"
+      },
+      "ExecutionStartedResponse" : {
+        "properties" : {
+          "executionId" : {
+            "format" : "uuid",
+            "type" : "string"
+          },
+          "status" : {
+            "enum" : [ "QUEUED", "RUNNING", "SUCCEEDED", "FAILED", "CANCELLED" ],
+            "type" : "string"
+          },
+          "workflowId" : {
+            "format" : "uuid",
+            "type" : "string"
+          }
+        },
+        "type" : "object"
+      },
+      "ExecutionSummaryResponse" : {
+        "properties" : {
+          "createdAt" : {
+            "format" : "date-time",
+            "type" : "string"
+          },
+          "durationMs" : {
+            "format" : "int64",
+            "type" : "integer"
+          },
+          "error" : {
+            "$ref" : "#/components/schemas/Error"
+          },
+          "failedNodeId" : {
+            "type" : "string"
+          },
+          "failedNodeName" : {
+            "type" : "string"
+          },
+          "failedNodes" : {
+            "format" : "int32",
+            "type" : "integer"
+          },
+          "finishedAt" : {
+            "format" : "date-time",
+            "type" : "string"
+          },
+          "id" : {
+            "format" : "uuid",
+            "type" : "string"
+          },
+          "nodeCount" : {
+            "format" : "int32",
+            "type" : "integer"
+          },
+          "scheduledFor" : {
+            "format" : "date-time",
+            "type" : "string"
+          },
+          "skippedNodes" : {
+            "format" : "int32",
+            "type" : "integer"
+          },
+          "startedAt" : {
+            "format" : "date-time",
+            "type" : "string"
+          },
+          "status" : {
+            "enum" : [ "QUEUED", "RUNNING", "SUCCEEDED", "FAILED", "CANCELLED" ],
+            "type" : "string"
+          },
+          "succeededNodes" : {
+            "format" : "int32",
+            "type" : "integer"
+          },
+          "triggerType" : {
+            "enum" : [ "MANUAL", "WEBHOOK", "SCHEDULE" ],
+            "type" : "string"
+          },
+          "workflowId" : {
+            "format" : "uuid",
+            "type" : "string"
+          },
+          "workflowVersion" : {
+            "format" : "int32",
+            "type" : "integer"
+          }
+        },
+        "type" : "object"
+      },
+      "HealthResponse" : {
+        "properties" : {
+          "components" : {
+            "additionalProperties" : {
+              "enum" : [ "UP", "DOWN" ],
+              "type" : "string"
+            },
+            "type" : "object"
+          },
+          "status" : {
+            "enum" : [ "UP", "DOWN" ],
+            "type" : "string"
+          },
+          "timestamp" : {
+            "format" : "date-time",
+            "type" : "string"
+          },
+          "version" : {
+            "type" : "string"
+          }
+        },
+        "type" : "object"
+      },
+      "Issue" : {
+        "properties" : {
+          "code" : {
+            "enum" : [ "TOO_MANY_NODES", "TOO_MANY_EDGES", "TOO_MANY_OUTGOING_EDGES", "DUPLICATE_NODE_ID", "DUPLICATE_NODE_NAME", "UNKNOWN_NODE_TYPE", "UNSUPPORTED_NODE_TYPE_VERSION", "CONFIGURATION_INVALID", "DUPLICATE_EDGE_ID", "EDGE_SOURCE_NOT_FOUND", "EDGE_TARGET_NOT_FOUND", "SELF_LOOP", "INVALID_SOURCE_HANDLE", "INVALID_TARGET_HANDLE", "DUPLICATE_CONNECTION", "UNSUPPORTED_MERGE", "NO_TRIGGER", "MULTIPLE_TRIGGERS", "CYCLE_DETECTED", "DISCONNECTED_NODE", "UNREACHABLE_NODE", "NO_BRANCH_CONNECTED", "BRANCH_NOT_CONNECTED", "TRIGGER_NOT_CONNECTED" ],
+            "type" : "string"
+          },
+          "edgeId" : {
+            "type" : "string"
+          },
+          "message" : {
+            "type" : "string"
+          },
+          "nodeId" : {
+            "type" : "string"
+          },
+          "path" : {
+            "type" : "string"
+          },
+          "severity" : {
+            "enum" : [ "ERROR", "WARNING" ],
+            "type" : "string"
+          }
+        },
+        "type" : "object"
+      },
+      "JsonNode" : { },
+      "LastExecution" : {
+        "properties" : {
+          "createdAt" : {
+            "format" : "date-time",
+            "type" : "string"
+          },
+          "finishedAt" : {
+            "format" : "date-time",
+            "type" : "string"
+          },
+          "id" : {
+            "format" : "uuid",
+            "type" : "string"
+          },
+          "status" : {
+            "enum" : [ "QUEUED", "RUNNING", "SUCCEEDED", "FAILED", "CANCELLED" ],
+            "type" : "string"
+          },
+          "triggerType" : {
+            "enum" : [ "MANUAL", "WEBHOOK", "SCHEDULE" ],
+            "type" : "string"
+          }
+        },
+        "type" : "object"
+      },
+      "LogLine" : {
+        "properties" : {
+          "at" : {
+            "format" : "date-time",
+            "type" : "string"
+          },
+          "level" : {
+            "type" : "string"
+          },
+          "message" : {
+            "type" : "string"
+          },
+          "nodeId" : {
+            "type" : "string"
+          }
+        },
+        "type" : "object"
+      },
+      "NodeDefinition" : {
+        "properties" : {
+          "configuration" : {
+            "additionalProperties" : { },
+            "type" : "object"
+          },
+          "id" : {
+            "minLength" : 1,
+            "pattern" : "^[A-Za-z0-9_-]{1,64}$",
+            "type" : "string"
+          },
+          "name" : {
+            "maxLength" : 100,
+            "minLength" : 0,
+            "type" : "string"
+          },
+          "position" : {
+            "$ref" : "#/components/schemas/NodePosition"
+          },
+          "type" : {
+            "minLength" : 1,
+            "pattern" : "^[a-z][a-z0-9]*(\\.[a-z][A-Za-z0-9]*)+$",
+            "type" : "string"
+          },
+          "typeVersion" : {
+            "format" : "int32",
+            "minimum" : 1,
+            "type" : "integer"
+          }
+        },
+        "required" : [ "configuration", "id", "name", "position", "type" ],
+        "type" : "object"
+      },
+      "NodePosition" : {
+        "properties" : {
+          "x" : {
+            "format" : "double",
+            "maximum" : 1000000,
+            "minimum" : -1000000,
+            "type" : "number"
+          },
+          "y" : {
+            "format" : "double",
+            "maximum" : 1000000,
+            "minimum" : -1000000,
+            "type" : "number"
+          }
+        },
+        "type" : "object"
+      },
+      "NodeRun" : {
+        "properties" : {
+          "durationMs" : {
+            "format" : "int64",
+            "type" : "integer"
+          },
+          "error" : {
+            "$ref" : "#/components/schemas/Error"
+          },
+          "finishedAt" : {
+            "format" : "date-time",
+            "type" : "string"
+          },
+          "input" : {
+            "$ref" : "#/components/schemas/JsonNode"
+          },
+          "nodeId" : {
+            "type" : "string"
+          },
+          "nodeName" : {
+            "type" : "string"
+          },
+          "nodeType" : {
+            "type" : "string"
+          },
+          "output" : {
+            "$ref" : "#/components/schemas/JsonNode"
+          },
+          "sequence" : {
+            "format" : "int32",
+            "type" : "integer"
+          },
+          "startedAt" : {
+            "format" : "date-time",
+            "type" : "string"
+          },
+          "status" : {
+            "enum" : [ "PENDING", "RUNNING", "SUCCEEDED", "FAILED", "SKIPPED" ],
+            "type" : "string"
+          }
+        },
+        "type" : "object"
+      },
+      "Outbound" : {
+        "properties" : {
+          "allowPrivateAddresses" : {
+            "type" : "boolean"
+          },
+          "allowedHosts" : {
+            "items" : {
+              "type" : "string"
+            },
+            "type" : "array"
+          },
+          "allowedPorts" : {
+            "items" : {
+              "format" : "int32",
+              "type" : "integer"
+            },
+            "type" : "array"
+          },
+          "maxRedirects" : {
+            "format" : "int32",
+            "type" : "integer"
+          },
+          "maxRequestBytes" : {
+            "format" : "int32",
+            "type" : "integer"
+          },
+          "maxResponseBytes" : {
+            "format" : "int32",
+            "type" : "integer"
+          }
+        },
+        "type" : "object"
+      },
+      "PageResponseExecutionSummaryResponse" : {
+        "properties" : {
+          "items" : {
+            "items" : {
+              "$ref" : "#/components/schemas/ExecutionSummaryResponse"
+            },
+            "type" : "array"
+          },
+          "page" : {
+            "format" : "int32",
+            "type" : "integer"
+          },
+          "size" : {
+            "format" : "int32",
+            "type" : "integer"
+          },
+          "totalElements" : {
+            "format" : "int64",
+            "type" : "integer"
+          },
+          "totalPages" : {
+            "format" : "int32",
+            "type" : "integer"
+          }
+        },
+        "type" : "object"
+      },
+      "PageResponseWorkflowSummaryResponse" : {
+        "properties" : {
+          "items" : {
+            "items" : {
+              "$ref" : "#/components/schemas/WorkflowSummaryResponse"
+            },
+            "type" : "array"
+          },
+          "page" : {
+            "format" : "int32",
+            "type" : "integer"
+          },
+          "size" : {
+            "format" : "int32",
+            "type" : "integer"
+          },
+          "totalElements" : {
+            "format" : "int64",
+            "type" : "integer"
+          },
+          "totalPages" : {
+            "format" : "int32",
+            "type" : "integer"
+          }
+        },
+        "type" : "object"
+      },
+      "ProblemDetail" : {
+        "properties" : {
+          "detail" : {
+            "type" : "string"
+          },
+          "instance" : {
+            "format" : "uri",
+            "type" : "string"
+          },
+          "properties" : {
+            "additionalProperties" : { },
+            "type" : "object"
+          },
+          "status" : {
+            "format" : "int32",
+            "type" : "integer"
+          },
+          "title" : {
+            "type" : "string"
+          },
+          "type" : {
+            "format" : "uri",
+            "type" : "string"
+          }
+        },
+        "type" : "object"
+      },
+      "ReEncryptResponse" : {
+        "properties" : {
+          "activeKeyId" : {
+            "type" : "string"
+          },
+          "reEncrypted" : {
+            "format" : "int32",
+            "type" : "integer"
+          },
+          "webhookSecrets" : {
+            "format" : "int32",
+            "type" : "integer"
+          }
+        },
+        "type" : "object"
+      },
+      "Rotate" : {
+        "properties" : {
+          "lockVersion" : {
+            "format" : "int64",
+            "type" : "integer"
+          },
+          "secret" : {
+            "additionalProperties" : {
+              "type" : "string"
+            },
+            "type" : "object"
+          }
+        },
+        "required" : [ "secret" ],
+        "type" : "object"
+      },
+      "Sample" : {
+        "properties" : {
+          "description" : {
+            "type" : "string"
+          },
+          "id" : {
+            "type" : "string"
+          },
+          "name" : {
+            "type" : "string"
+          }
+        },
+        "type" : "object"
+      },
+      "Schedule" : {
+        "properties" : {
+          "active" : {
+            "type" : "boolean"
+          },
+          "cron" : {
+            "type" : "string"
+          },
+          "lastError" : {
+            "type" : "string"
+          },
+          "lastExecutionId" : {
+            "format" : "uuid",
+            "type" : "string"
+          },
+          "lastFireAt" : {
+            "format" : "date-time",
+            "type" : "string"
+          },
+          "lastMissedAt" : {
+            "format" : "date-time",
+            "type" : "string"
+          },
+          "missedRunPolicy" : {
+            "type" : "string"
+          },
+          "nextFireAt" : {
+            "format" : "date-time",
+            "type" : "string"
+          },
+          "nodeId" : {
+            "type" : "string"
+          },
+          "timezone" : {
+            "type" : "string"
+          }
+        },
+        "type" : "object"
+      },
+      "Security" : {
+        "properties" : {
+          "allowedHostNames" : {
+            "items" : {
+              "type" : "string"
+            },
+            "type" : "array"
+          },
+          "allowedOrigins" : {
+            "items" : {
+              "type" : "string"
+            },
+            "type" : "array"
+          },
+          "maxRequestBytes" : {
+            "format" : "int32",
+            "type" : "integer"
+          }
+        },
+        "type" : "object"
+      },
+      "Settings" : {
+        "properties" : {
+          "ai" : {
+            "$ref" : "#/components/schemas/Ai"
+          },
+          "application" : {
+            "$ref" : "#/components/schemas/Application"
+          },
+          "credentials" : {
+            "$ref" : "#/components/schemas/Credentials"
+          },
+          "execution" : {
+            "$ref" : "#/components/schemas/Execution"
+          },
+          "outbound" : {
+            "$ref" : "#/components/schemas/Outbound"
+          },
+          "security" : {
+            "$ref" : "#/components/schemas/Security"
+          },
+          "triggers" : {
+            "$ref" : "#/components/schemas/Triggers"
+          }
+        },
+        "type" : "object"
+      },
+      "SseEmitter" : {
+        "properties" : {
+          "timeout" : {
+            "format" : "int64",
+            "type" : "integer"
+          }
+        },
+        "type" : "object"
+      },
+      "Triggers" : {
+        "properties" : {
+          "allowUnauthenticatedWebhooks" : {
+            "type" : "boolean"
+          },
+          "schedulerEnabled" : {
+            "type" : "boolean"
+          },
+          "schedulerPollSeconds" : {
+            "format" : "int64",
+            "type" : "integer"
+          },
+          "webhookMaxBodyBytes" : {
+            "format" : "int32",
+            "type" : "integer"
+          }
+        },
+        "type" : "object"
+      },
+      "TriggersResponse" : {
+        "properties" : {
+          "schedule" : {
+            "$ref" : "#/components/schemas/Schedule"
+          },
+          "status" : {
+            "enum" : [ "DRAFT", "ACTIVE", "INACTIVE", "ARCHIVED" ],
+            "type" : "string"
+          },
+          "triggerType" : {
+            "type" : "string"
+          },
+          "webhook" : {
+            "$ref" : "#/components/schemas/Webhook"
+          },
+          "workflowId" : {
+            "format" : "uuid",
+            "type" : "string"
+          }
+        },
+        "type" : "object"
+      },
+      "Update" : {
+        "properties" : {
+          "allowedHosts" : {
+            "items" : {
+              "type" : "string"
+            },
+            "maxItems" : 20,
+            "minItems" : 0,
+            "type" : "array"
+          },
+          "description" : {
+            "type" : "string"
+          },
+          "fields" : {
+            "additionalProperties" : {
+              "type" : "string"
+            },
+            "type" : "object"
+          },
+          "lockVersion" : {
+            "format" : "int64",
+            "type" : "integer"
+          },
+          "name" : {
+            "type" : "string"
+          }
+        },
+        "required" : [ "allowedHosts", "lockVersion", "name" ],
+        "type" : "object"
+      },
+      "UpdateWorkflowRequest" : {
+        "properties" : {
+          "definition" : {
+            "$ref" : "#/components/schemas/WorkflowDefinition"
+          },
+          "description" : {
+            "maxLength" : 2000,
+            "minLength" : 0,
+            "type" : "string"
+          },
+          "lockVersion" : {
+            "description" : "The lockVersion from the last response you read. A mismatch returns 409.",
+            "format" : "int64",
+            "minimum" : 0,
+            "type" : "integer"
+          },
+          "name" : {
+            "maxLength" : 200,
+            "minLength" : 0,
+            "type" : "string"
+          },
+          "status" : {
+            "description" : "Optional. Omit to keep the current status. Set to a non-ARCHIVED value to restore an archived workflow.",
+            "enum" : [ "DRAFT", "ACTIVE", "INACTIVE", "ARCHIVED" ],
+            "type" : "string"
+          }
+        },
+        "required" : [ "definition", "lockVersion", "name" ],
+        "type" : "object"
+      },
+      "Usage" : {
+        "properties" : {
+          "id" : {
+            "type" : "string"
+          },
+          "name" : {
+            "type" : "string"
+          },
+          "status" : {
+            "type" : "string"
+          }
+        },
+        "type" : "object"
+      },
+      "UsageResponse" : {
+        "properties" : {
+          "workflows" : {
+            "items" : {
+              "$ref" : "#/components/schemas/Usage"
+            },
+            "type" : "array"
+          }
+        },
+        "type" : "object"
+      },
+      "ValidateWorkflowRequest" : {
+        "properties" : {
+          "definition" : {
+            "$ref" : "#/components/schemas/WorkflowDefinition",
+            "description" : "Definition to validate, e.g. the editor's unsaved canvas. Omit (or send no body) to validate the stored definition."
+          }
+        },
+        "type" : "object"
+      },
+      "ValidationResultResponse" : {
+        "properties" : {
+          "errorCount" : {
+            "format" : "int64",
+            "type" : "integer"
+          },
+          "executionOrder" : {
+            "items" : {
+              "type" : "string"
+            },
+            "type" : "array"
+          },
+          "issues" : {
+            "items" : {
+              "$ref" : "#/components/schemas/Issue"
+            },
+            "type" : "array"
+          },
+          "valid" : {
+            "type" : "boolean"
+          },
+          "warningCount" : {
+            "format" : "int64",
+            "type" : "integer"
+          }
+        },
+        "type" : "object"
+      },
+      "Viewport" : {
+        "properties" : {
+          "x" : {
+            "format" : "double",
+            "type" : "number"
+          },
+          "y" : {
+            "format" : "double",
+            "type" : "number"
+          },
+          "zoom" : {
+            "format" : "double",
+            "maximum" : 10,
+            "minimum" : 0.05,
+            "type" : "number"
+          }
+        },
+        "type" : "object"
+      },
+      "Webhook" : {
+        "properties" : {
+          "active" : {
+            "type" : "boolean"
+          },
+          "authentication" : {
+            "type" : "string"
+          },
+          "inputMode" : {
+            "type" : "string"
+          },
+          "method" : {
+            "type" : "string"
+          },
+          "nodeId" : {
+            "type" : "string"
+          },
+          "path" : {
+            "type" : "string"
+          },
+          "secretHint" : {
+            "type" : "string"
+          },
+          "webhookId" : {
+            "type" : "string"
+          }
+        },
+        "type" : "object"
+      },
+      "WebhookSecretResponse" : {
+        "properties" : {
+          "secret" : {
+            "type" : "string"
+          }
+        },
+        "type" : "object"
+      },
+      "WorkflowDefinition" : {
+        "properties" : {
+          "edges" : {
+            "items" : {
+              "$ref" : "#/components/schemas/EdgeDefinition"
+            },
+            "maxItems" : 2000,
+            "minItems" : 0,
+            "type" : "array"
+          },
+          "editor" : {
+            "$ref" : "#/components/schemas/EditorMetadata"
+          },
+          "nodes" : {
+            "items" : {
+              "$ref" : "#/components/schemas/NodeDefinition"
+            },
+            "maxItems" : 500,
+            "minItems" : 0,
+            "type" : "array"
+          },
+          "schemaVersion" : {
+            "format" : "int32",
+            "maximum" : 1,
+            "minimum" : 1,
+            "type" : "integer"
+          }
+        },
+        "required" : [ "edges", "nodes" ],
+        "type" : "object"
+      },
+      "WorkflowResponse" : {
+        "properties" : {
+          "createdAt" : {
+            "format" : "date-time",
+            "type" : "string"
+          },
+          "definition" : {
+            "$ref" : "#/components/schemas/WorkflowDefinition"
+          },
+          "description" : {
+            "type" : "string"
+          },
+          "id" : {
+            "format" : "uuid",
+            "type" : "string"
+          },
+          "lockVersion" : {
+            "format" : "int64",
+            "type" : "integer"
+          },
+          "name" : {
+            "type" : "string"
+          },
+          "status" : {
+            "enum" : [ "DRAFT", "ACTIVE", "INACTIVE", "ARCHIVED" ],
+            "type" : "string"
+          },
+          "updatedAt" : {
+            "format" : "date-time",
+            "type" : "string"
+          },
+          "version" : {
+            "format" : "int32",
+            "type" : "integer"
+          }
+        },
+        "type" : "object"
+      },
+      "WorkflowSummaryResponse" : {
+        "properties" : {
+          "createdAt" : {
+            "format" : "date-time",
+            "type" : "string"
+          },
+          "description" : {
+            "type" : "string"
+          },
+          "edgeCount" : {
+            "format" : "int32",
+            "type" : "integer"
+          },
+          "id" : {
+            "format" : "uuid",
+            "type" : "string"
+          },
+          "lastExecution" : {
+            "$ref" : "#/components/schemas/LastExecution"
+          },
+          "lockVersion" : {
+            "format" : "int64",
+            "type" : "integer"
+          },
+          "name" : {
+            "type" : "string"
+          },
+          "nodeCount" : {
+            "format" : "int32",
+            "type" : "integer"
+          },
+          "status" : {
+            "enum" : [ "DRAFT", "ACTIVE", "INACTIVE", "ARCHIVED" ],
+            "type" : "string"
+          },
+          "updatedAt" : {
+            "format" : "date-time",
+            "type" : "string"
+          },
+          "version" : {
+            "format" : "int32",
+            "type" : "integer"
+          }
+        },
+        "type" : "object"
+      }
+    }
+  },
+  "info" : {
+    "description" : "REST API of the FlowForge workflow automation backend. Errors are RFC 9457 Problem Details.",
+    "title" : "FlowForge API",
+    "version" : "0.1.0-SNAPSHOT"
+  },
+  "openapi" : "3.1.0",
+  "paths" : {
+    "/api/v1/credentials" : {
+      "get" : {
+        "description" : "Sorted by name; optional type filter.",
+        "operationId" : "list_1",
+        "parameters" : [ {
+          "in" : "query",
+          "name" : "type",
+          "required" : false,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "items" : {
+                    "$ref" : "#/components/schemas/CredentialResponse"
+                  },
+                  "type" : "array"
+                }
+              }
+            },
+            "description" : "Credentials, sorted by name"
+          },
+          "404" : {
+            "content" : {
+              "application/problem+json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ProblemDetail"
+                }
+              }
+            },
+            "description" : "Not found (or owned by someone else)"
+          }
+        },
+        "summary" : "List credentials (without secrets)",
+        "tags" : [ "Credentials" ]
+      },
+      "post" : {
+        "description" : "The secret is encrypted with AES-256-GCM and never returned.",
+        "operationId" : "create_2",
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/Create"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "201" : {
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/CredentialResponse"
+                }
+              }
+            },
+            "description" : "Created"
+          },
+          "404" : {
+            "content" : {
+              "application/problem+json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ProblemDetail"
+                }
+              }
+            },
+            "description" : "Not found (or owned by someone else)"
+          },
+          "503" : {
+            "content" : {
+              "application/problem+json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ProblemDetail"
+                }
+              }
+            },
+            "description" : "No encryption key configured"
+          }
+        },
+        "summary" : "Create a credential",
+        "tags" : [ "Credentials" ]
+      }
+    },
+    "/api/v1/credentials/re-encrypt" : {
+      "post" : {
+        "description" : "Key rotation: add a new key to the keyring, make it active, call this, then remove the old key. Also encrypts webhook secrets still stored in plaintext.",
+        "operationId" : "reEncrypt",
+        "responses" : {
+          "200" : {
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ReEncryptResponse"
+                }
+              }
+            },
+            "description" : "Re-encryption summary"
+          },
+          "404" : {
+            "content" : {
+              "application/problem+json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ProblemDetail"
+                }
+              }
+            },
+            "description" : "Not found (or owned by someone else)"
+          }
+        },
+        "summary" : "Re-encrypt all credentials with the active key",
+        "tags" : [ "Credentials" ]
+      }
+    },
+    "/api/v1/credentials/status" : {
+      "get" : {
+        "description" : "Whether a key is configured, the active key id and how many credentials still use an older key.",
+        "operationId" : "status",
+        "responses" : {
+          "200" : {
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/EncryptionStatus"
+                }
+              }
+            },
+            "description" : "Encryption status"
+          },
+          "404" : {
+            "content" : {
+              "application/problem+json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ProblemDetail"
+                }
+              }
+            },
+            "description" : "Not found (or owned by someone else)"
+          }
+        },
+        "summary" : "Encryption status",
+        "tags" : [ "Credentials" ]
+      }
+    },
+    "/api/v1/credentials/{id}" : {
+      "delete" : {
+        "description" : "Refused with 409 (and the workflows) while referenced.",
+        "operationId" : "delete_1",
+        "parameters" : [ {
+          "in" : "path",
+          "name" : "id",
+          "required" : true,
+          "schema" : {
+            "format" : "uuid",
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "204" : {
+            "description" : "Deleted"
+          },
+          "404" : {
+            "content" : {
+              "application/problem+json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ProblemDetail"
+                }
+              }
+            },
+            "description" : "Not found (or owned by someone else)"
+          },
+          "409" : {
+            "content" : {
+              "application/problem+json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ProblemDetail"
+                }
+              }
+            },
+            "description" : "Still referenced by workflows"
+          }
+        },
+        "summary" : "Delete a credential",
+        "tags" : [ "Credentials" ]
+      },
+      "get" : {
+        "operationId" : "get_1",
+        "parameters" : [ {
+          "in" : "path",
+          "name" : "id",
+          "required" : true,
+          "schema" : {
+            "format" : "uuid",
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/CredentialResponse"
+                }
+              }
+            },
+            "description" : "The credential"
+          },
+          "404" : {
+            "content" : {
+              "application/problem+json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ProblemDetail"
+                }
+              }
+            },
+            "description" : "Not found (or owned by someone else)"
+          }
+        },
+        "summary" : "Get a credential (without secret)",
+        "tags" : [ "Credentials" ]
+      },
+      "put" : {
+        "description" : "Requires lockVersion. The secret is changed only by rotation.",
+        "operationId" : "update_1",
+        "parameters" : [ {
+          "in" : "path",
+          "name" : "id",
+          "required" : true,
+          "schema" : {
+            "format" : "uuid",
+            "type" : "string"
+          }
+        } ],
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/Update"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "200" : {
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/CredentialResponse"
+                }
+              }
+            },
+            "description" : "Updated"
+          },
+          "404" : {
+            "content" : {
+              "application/problem+json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ProblemDetail"
+                }
+              }
+            },
+            "description" : "Not found (or owned by someone else)"
+          }
+        },
+        "summary" : "Update name, description, allowed hosts and non-secret fields",
+        "tags" : [ "Credentials" ]
+      }
+    },
+    "/api/v1/credentials/{id}/rotate" : {
+      "post" : {
+        "description" : "Replaces the secret value; secretVersion increments. Runs started afterwards use the new value.",
+        "operationId" : "rotate_1",
+        "parameters" : [ {
+          "in" : "path",
+          "name" : "id",
+          "required" : true,
+          "schema" : {
+            "format" : "uuid",
+            "type" : "string"
+          }
+        } ],
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/Rotate"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "200" : {
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/CredentialResponse"
+                }
+              }
+            },
+            "description" : "Rotated"
+          },
+          "404" : {
+            "content" : {
+              "application/problem+json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ProblemDetail"
+                }
+              }
+            },
+            "description" : "Not found (or owned by someone else)"
+          }
+        },
+        "summary" : "Rotate the secret",
+        "tags" : [ "Credentials" ]
+      }
+    },
+    "/api/v1/credentials/{id}/usage" : {
+      "get" : {
+        "operationId" : "usage",
+        "parameters" : [ {
+          "in" : "path",
+          "name" : "id",
+          "required" : true,
+          "schema" : {
+            "format" : "uuid",
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/UsageResponse"
+                }
+              }
+            },
+            "description" : "Referencing workflows"
+          },
+          "404" : {
+            "content" : {
+              "application/problem+json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ProblemDetail"
+                }
+              }
+            },
+            "description" : "Not found (or owned by someone else)"
+          }
+        },
+        "summary" : "Workflows that reference the credential",
+        "tags" : [ "Credentials" ]
+      }
+    },
+    "/api/v1/executions/{executionId}" : {
+      "get" : {
+        "operationId" : "get_4",
+        "parameters" : [ {
+          "in" : "path",
+          "name" : "executionId",
+          "required" : true,
+          "schema" : {
+            "format" : "uuid",
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ExecutionResponse"
+                }
+              }
+            },
+            "description" : "The execution"
+          },
+          "404" : {
+            "content" : {
+              "application/problem+json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ProblemDetail"
+                }
+              }
+            },
+            "description" : "Not found"
+          }
+        },
+        "summary" : "Get an execution with its node runs",
+        "tags" : [ "Executions" ]
+      }
+    },
+    "/api/v1/executions/{executionId}/cancel" : {
+      "post" : {
+        "description" : "Cancellation is asynchronous: the response may still show QUEUED or RUNNING.",
+        "operationId" : "cancel",
+        "parameters" : [ {
+          "in" : "path",
+          "name" : "executionId",
+          "required" : true,
+          "schema" : {
+            "format" : "uuid",
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "202" : {
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ExecutionResponse"
+                }
+              }
+            },
+            "description" : "Cancellation requested"
+          },
+          "409" : {
+            "content" : {
+              "application/problem+json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ProblemDetail"
+                }
+              }
+            },
+            "description" : "Execution already finished"
+          }
+        },
+        "summary" : "Request cancellation of a queued or running execution",
+        "tags" : [ "Executions" ]
+      }
+    },
+    "/api/v1/executions/{executionId}/events" : {
+      "get" : {
+        "description" : "First event is `snapshot` (persisted status of the execution and every node). Then `execution.started`, `node.started`, `node.succeeded`, `node.failed`, `node.skipped` and one of `execution.completed`, `execution.failed`, `execution.cancelled`, after which the stream ends. Events carry statuses and timing, never node input/output (use GET /executions/{id}). Reconnecting always starts with a fresh snapshot; an execution that already finished yields the snapshot only.",
+        "operationId" : "events",
+        "parameters" : [ {
+          "in" : "path",
+          "name" : "executionId",
+          "required" : true,
+          "schema" : {
+            "format" : "uuid",
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "text/event-stream" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/SseEmitter"
+                }
+              }
+            },
+            "description" : "text/event-stream"
+          },
+          "404" : {
+            "content" : {
+              "application/problem+json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ProblemDetail"
+                }
+              }
+            },
+            "description" : "Execution not found"
+          },
+          "503" : {
+            "content" : {
+              "application/problem+json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ProblemDetail"
+                }
+              }
+            },
+            "description" : "Too many live connections"
+          }
+        },
+        "summary" : "Live status changes of an execution (Server-Sent Events)",
+        "tags" : [ "Executions" ]
+      }
+    },
+    "/api/v1/executions/{executionId}/nodes" : {
+      "get" : {
+        "description" : "Inputs, outputs, errors, timing and the node name from the execution's own snapshot. Optional status filter.",
+        "operationId" : "nodes",
+        "parameters" : [ {
+          "in" : "path",
+          "name" : "executionId",
+          "required" : true,
+          "schema" : {
+            "format" : "uuid",
+            "type" : "string"
+          }
+        }, {
+          "in" : "query",
+          "name" : "status",
+          "required" : false,
+          "schema" : {
+            "items" : {
+              "enum" : [ "PENDING", "RUNNING", "SUCCEEDED", "FAILED", "SKIPPED" ],
+              "type" : "string"
+            },
+            "type" : "array"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ExecutionNodesResponse"
+                }
+              }
+            },
+            "description" : "Node results"
+          },
+          "404" : {
+            "content" : {
+              "application/problem+json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ProblemDetail"
+                }
+              }
+            },
+            "description" : "Not found"
+          }
+        },
+        "summary" : "Node-level results of an execution, in execution order",
+        "tags" : [ "Executions" ]
+      }
+    },
+    "/api/v1/health" : {
+      "get" : {
+        "operationId" : "health",
+        "responses" : {
+          "200" : {
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/HealthResponse"
+                }
+              }
+            },
+            "description" : "OK"
+          }
+        },
+        "tags" : [ "health-controller" ]
+      }
+    },
+    "/api/v1/hooks/{webhookId}" : {
+      "delete" : {
+        "description" : "Starts the workflow whose active webhook trigger has this id. Authenticate with X-FlowForge-Timestamp + X-FlowForge-Signature (sha256=HMAC-SHA256(secret, timestamp + '.' + body)) or, for token triggers, Authorization: Bearer <secret> / X-FlowForge-Token. Bodies must be JSON.",
+        "operationId" : "receive_3",
+        "parameters" : [ {
+          "in" : "path",
+          "name" : "webhookId",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "202" : {
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ExecutionStartedResponse"
+                }
+              }
+            },
+            "description" : "Accepted; the execution was queued"
+          },
+          "401" : {
+            "content" : {
+              "application/problem+json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ProblemDetail"
+                }
+              }
+            },
+            "description" : "Missing or invalid credentials"
+          },
+          "404" : {
+            "content" : {
+              "application/problem+json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ProblemDetail"
+                }
+              }
+            },
+            "description" : "Unknown webhook, or its workflow is not active"
+          },
+          "405" : {
+            "content" : {
+              "application/problem+json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ProblemDetail"
+                }
+              }
+            },
+            "description" : "Method not configured for this webhook (see Allow)"
+          },
+          "409" : {
+            "content" : {
+              "application/problem+json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ProblemDetail"
+                }
+              }
+            },
+            "description" : "Signed delivery replayed"
+          },
+          "413" : {
+            "content" : {
+              "application/problem+json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ProblemDetail"
+                }
+              }
+            },
+            "description" : "Body larger than flowforge.triggers.webhook-max-body-bytes"
+          },
+          "415" : {
+            "content" : {
+              "application/problem+json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ProblemDetail"
+                }
+              }
+            },
+            "description" : "Body is not JSON"
+          }
+        },
+        "summary" : "Deliver a webhook",
+        "tags" : [ "Webhooks" ]
+      },
+      "get" : {
+        "description" : "Starts the workflow whose active webhook trigger has this id. Authenticate with X-FlowForge-Timestamp + X-FlowForge-Signature (sha256=HMAC-SHA256(secret, timestamp + '.' + body)) or, for token triggers, Authorization: Bearer <secret> / X-FlowForge-Token. Bodies must be JSON.",
+        "operationId" : "receive",
+        "parameters" : [ {
+          "in" : "path",
+          "name" : "webhookId",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "202" : {
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ExecutionStartedResponse"
+                }
+              }
+            },
+            "description" : "Accepted; the execution was queued"
+          },
+          "401" : {
+            "content" : {
+              "application/problem+json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ProblemDetail"
+                }
+              }
+            },
+            "description" : "Missing or invalid credentials"
+          },
+          "404" : {
+            "content" : {
+              "application/problem+json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ProblemDetail"
+                }
+              }
+            },
+            "description" : "Unknown webhook, or its workflow is not active"
+          },
+          "405" : {
+            "content" : {
+              "application/problem+json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ProblemDetail"
+                }
+              }
+            },
+            "description" : "Method not configured for this webhook (see Allow)"
+          },
+          "409" : {
+            "content" : {
+              "application/problem+json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ProblemDetail"
+                }
+              }
+            },
+            "description" : "Signed delivery replayed"
+          },
+          "413" : {
+            "content" : {
+              "application/problem+json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ProblemDetail"
+                }
+              }
+            },
+            "description" : "Body larger than flowforge.triggers.webhook-max-body-bytes"
+          },
+          "415" : {
+            "content" : {
+              "application/problem+json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ProblemDetail"
+                }
+              }
+            },
+            "description" : "Body is not JSON"
+          }
+        },
+        "summary" : "Deliver a webhook",
+        "tags" : [ "Webhooks" ]
+      },
+      "patch" : {
+        "description" : "Starts the workflow whose active webhook trigger has this id. Authenticate with X-FlowForge-Timestamp + X-FlowForge-Signature (sha256=HMAC-SHA256(secret, timestamp + '.' + body)) or, for token triggers, Authorization: Bearer <secret> / X-FlowForge-Token. Bodies must be JSON.",
+        "operationId" : "receive_4",
+        "parameters" : [ {
+          "in" : "path",
+          "name" : "webhookId",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "202" : {
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ExecutionStartedResponse"
+                }
+              }
+            },
+            "description" : "Accepted; the execution was queued"
+          },
+          "401" : {
+            "content" : {
+              "application/problem+json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ProblemDetail"
+                }
+              }
+            },
+            "description" : "Missing or invalid credentials"
+          },
+          "404" : {
+            "content" : {
+              "application/problem+json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ProblemDetail"
+                }
+              }
+            },
+            "description" : "Unknown webhook, or its workflow is not active"
+          },
+          "405" : {
+            "content" : {
+              "application/problem+json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ProblemDetail"
+                }
+              }
+            },
+            "description" : "Method not configured for this webhook (see Allow)"
+          },
+          "409" : {
+            "content" : {
+              "application/problem+json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ProblemDetail"
+                }
+              }
+            },
+            "description" : "Signed delivery replayed"
+          },
+          "413" : {
+            "content" : {
+              "application/problem+json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ProblemDetail"
+                }
+              }
+            },
+            "description" : "Body larger than flowforge.triggers.webhook-max-body-bytes"
+          },
+          "415" : {
+            "content" : {
+              "application/problem+json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ProblemDetail"
+                }
+              }
+            },
+            "description" : "Body is not JSON"
+          }
+        },
+        "summary" : "Deliver a webhook",
+        "tags" : [ "Webhooks" ]
+      },
+      "post" : {
+        "description" : "Starts the workflow whose active webhook trigger has this id. Authenticate with X-FlowForge-Timestamp + X-FlowForge-Signature (sha256=HMAC-SHA256(secret, timestamp + '.' + body)) or, for token triggers, Authorization: Bearer <secret> / X-FlowForge-Token. Bodies must be JSON.",
+        "operationId" : "receive_1",
+        "parameters" : [ {
+          "in" : "path",
+          "name" : "webhookId",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "202" : {
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ExecutionStartedResponse"
+                }
+              }
+            },
+            "description" : "Accepted; the execution was queued"
+          },
+          "401" : {
+            "content" : {
+              "application/problem+json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ProblemDetail"
+                }
+              }
+            },
+            "description" : "Missing or invalid credentials"
+          },
+          "404" : {
+            "content" : {
+              "application/problem+json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ProblemDetail"
+                }
+              }
+            },
+            "description" : "Unknown webhook, or its workflow is not active"
+          },
+          "405" : {
+            "content" : {
+              "application/problem+json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ProblemDetail"
+                }
+              }
+            },
+            "description" : "Method not configured for this webhook (see Allow)"
+          },
+          "409" : {
+            "content" : {
+              "application/problem+json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ProblemDetail"
+                }
+              }
+            },
+            "description" : "Signed delivery replayed"
+          },
+          "413" : {
+            "content" : {
+              "application/problem+json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ProblemDetail"
+                }
+              }
+            },
+            "description" : "Body larger than flowforge.triggers.webhook-max-body-bytes"
+          },
+          "415" : {
+            "content" : {
+              "application/problem+json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ProblemDetail"
+                }
+              }
+            },
+            "description" : "Body is not JSON"
+          }
+        },
+        "summary" : "Deliver a webhook",
+        "tags" : [ "Webhooks" ]
+      },
+      "put" : {
+        "description" : "Starts the workflow whose active webhook trigger has this id. Authenticate with X-FlowForge-Timestamp + X-FlowForge-Signature (sha256=HMAC-SHA256(secret, timestamp + '.' + body)) or, for token triggers, Authorization: Bearer <secret> / X-FlowForge-Token. Bodies must be JSON.",
+        "operationId" : "receive_2",
+        "parameters" : [ {
+          "in" : "path",
+          "name" : "webhookId",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "202" : {
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ExecutionStartedResponse"
+                }
+              }
+            },
+            "description" : "Accepted; the execution was queued"
+          },
+          "401" : {
+            "content" : {
+              "application/problem+json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ProblemDetail"
+                }
+              }
+            },
+            "description" : "Missing or invalid credentials"
+          },
+          "404" : {
+            "content" : {
+              "application/problem+json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ProblemDetail"
+                }
+              }
+            },
+            "description" : "Unknown webhook, or its workflow is not active"
+          },
+          "405" : {
+            "content" : {
+              "application/problem+json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ProblemDetail"
+                }
+              }
+            },
+            "description" : "Method not configured for this webhook (see Allow)"
+          },
+          "409" : {
+            "content" : {
+              "application/problem+json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ProblemDetail"
+                }
+              }
+            },
+            "description" : "Signed delivery replayed"
+          },
+          "413" : {
+            "content" : {
+              "application/problem+json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ProblemDetail"
+                }
+              }
+            },
+            "description" : "Body larger than flowforge.triggers.webhook-max-body-bytes"
+          },
+          "415" : {
+            "content" : {
+              "application/problem+json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ProblemDetail"
+                }
+              }
+            },
+            "description" : "Body is not JSON"
+          }
+        },
+        "summary" : "Deliver a webhook",
+        "tags" : [ "Webhooks" ]
+      }
+    },
+    "/api/v1/samples" : {
+      "get" : {
+        "operationId" : "list_3",
+        "responses" : {
+          "200" : {
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "items" : {
+                    "$ref" : "#/components/schemas/Sample"
+                  },
+                  "type" : "array"
+                }
+              }
+            },
+            "description" : "OK"
+          }
+        },
+        "summary" : "List the sample workflows",
+        "tags" : [ "Samples" ]
+      }
+    },
+    "/api/v1/samples/{id}/create" : {
+      "post" : {
+        "description" : "Optional body {credentialId}: stored on the sample's AI Model node. Nothing is executed.",
+        "operationId" : "create_1",
+        "parameters" : [ {
+          "in" : "path",
+          "name" : "id",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "requestBody" : {
+          "content" : {
+            "*/*" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/CreateSampleRequest"
+              }
+            },
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/CreateSampleRequest"
+              }
+            }
+          }
+        },
+        "responses" : {
+          "201" : {
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/WorkflowResponse"
+                }
+              }
+            },
+            "description" : "Created; Location points to the new workflow"
+          },
+          "404" : {
+            "content" : {
+              "application/problem+json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ProblemDetail"
+                }
+              }
+            },
+            "description" : "Unknown sample"
+          }
+        },
+        "summary" : "Create a DRAFT workflow from a sample",
+        "tags" : [ "Samples" ]
+      }
+    },
+    "/api/v1/settings" : {
+      "get" : {
+        "description" : "Limits, outbound allowlist, trigger and security settings as the server runs with them. Contains no secrets; change values with environment variables and restart.",
+        "operationId" : "get_3",
+        "responses" : {
+          "200" : {
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Settings"
+                }
+              }
+            },
+            "description" : "OK"
+          }
+        },
+        "summary" : "Effective server settings (read-only)",
+        "tags" : [ "Settings" ]
+      }
+    },
+    "/api/v1/workflows" : {
+      "get" : {
+        "description" : "Paginated and sortable. Archived workflows are hidden unless status=ARCHIVED is requested. Each item carries lastExecution (newest run of any kind) when the workflow ever ran.",
+        "operationId" : "list",
+        "parameters" : [ {
+          "description" : "Case-insensitive substring of the name",
+          "in" : "query",
+          "name" : "name",
+          "required" : false,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "description" : "Repeatable status filter",
+          "in" : "query",
+          "name" : "status",
+          "required" : false,
+          "schema" : {
+            "items" : {
+              "enum" : [ "DRAFT", "ACTIVE", "INACTIVE", "ARCHIVED" ],
+              "type" : "string"
+            },
+            "type" : "array"
+          }
+        }, {
+          "description" : "Zero-based page index",
+          "in" : "query",
+          "name" : "page",
+          "required" : false,
+          "schema" : {
+            "default" : 0,
+            "format" : "int32",
+            "type" : "integer"
+          }
+        }, {
+          "description" : "Page size, 1..100",
+          "in" : "query",
+          "name" : "size",
+          "required" : false,
+          "schema" : {
+            "default" : 20,
+            "format" : "int32",
+            "type" : "integer"
+          }
+        }, {
+          "description" : "property[,asc|desc]; properties: name, status, version, createdAt, updatedAt",
+          "example" : "updatedAt,desc",
+          "in" : "query",
+          "name" : "sort",
+          "required" : false,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/PageResponseWorkflowSummaryResponse"
+                }
+              }
+            },
+            "description" : "A page of workflow summaries"
+          },
+          "400" : {
+            "content" : {
+              "application/problem+json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ProblemDetail"
+                }
+              }
+            },
+            "description" : "Validation failed or invalid request"
+          }
+        },
+        "summary" : "List workflows",
+        "tags" : [ "Workflows" ]
+      },
+      "post" : {
+        "operationId" : "create",
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/CreateWorkflowRequest"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "201" : {
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/WorkflowResponse"
+                }
+              }
+            },
+            "description" : "Created; Location header points to the new workflow"
+          },
+          "400" : {
+            "content" : {
+              "application/problem+json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ProblemDetail"
+                }
+              }
+            },
+            "description" : "Validation failed or invalid request"
+          }
+        },
+        "summary" : "Create a workflow (status DRAFT, version 1)",
+        "tags" : [ "Workflows" ]
+      }
+    },
+    "/api/v1/workflows/{id}" : {
+      "delete" : {
+        "description" : "Default: soft delete, sets status ARCHIVED (idempotent). With permanent=true: hard delete of an already archived workflow, including its executions.",
+        "operationId" : "delete",
+        "parameters" : [ {
+          "in" : "path",
+          "name" : "id",
+          "required" : true,
+          "schema" : {
+            "format" : "uuid",
+            "type" : "string"
+          }
+        }, {
+          "in" : "query",
+          "name" : "permanent",
+          "required" : false,
+          "schema" : {
+            "default" : false,
+            "type" : "boolean"
+          }
+        } ],
+        "responses" : {
+          "204" : {
+            "description" : "Archived or permanently deleted"
+          },
+          "400" : {
+            "content" : {
+              "application/problem+json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ProblemDetail"
+                }
+              }
+            },
+            "description" : "Validation failed or invalid request"
+          },
+          "404" : {
+            "content" : {
+              "application/problem+json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ProblemDetail"
+                }
+              }
+            },
+            "description" : "Not found"
+          },
+          "409" : {
+            "content" : {
+              "application/problem+json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ProblemDetail"
+                }
+              }
+            },
+            "description" : "permanent=true on a workflow that is not archived"
+          }
+        },
+        "summary" : "Delete a workflow",
+        "tags" : [ "Workflows" ]
+      },
+      "get" : {
+        "operationId" : "get",
+        "parameters" : [ {
+          "in" : "path",
+          "name" : "id",
+          "required" : true,
+          "schema" : {
+            "format" : "uuid",
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/WorkflowResponse"
+                }
+              }
+            },
+            "description" : "The workflow"
+          },
+          "400" : {
+            "content" : {
+              "application/problem+json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ProblemDetail"
+                }
+              }
+            },
+            "description" : "Validation failed or invalid request"
+          },
+          "404" : {
+            "content" : {
+              "application/problem+json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ProblemDetail"
+                }
+              }
+            },
+            "description" : "Not found"
+          }
+        },
+        "summary" : "Get a workflow including its definition",
+        "tags" : [ "Workflows" ]
+      },
+      "put" : {
+        "description" : "Requires the lockVersion from the last read. The definition version increments only when the definition actually changed.",
+        "operationId" : "update",
+        "parameters" : [ {
+          "in" : "path",
+          "name" : "id",
+          "required" : true,
+          "schema" : {
+            "format" : "uuid",
+            "type" : "string"
+          }
+        } ],
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/UpdateWorkflowRequest"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "200" : {
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/WorkflowResponse"
+                }
+              }
+            },
+            "description" : "Saved"
+          },
+          "400" : {
+            "content" : {
+              "application/problem+json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ProblemDetail"
+                }
+              }
+            },
+            "description" : "Validation failed or invalid request"
+          },
+          "404" : {
+            "content" : {
+              "application/problem+json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ProblemDetail"
+                }
+              }
+            },
+            "description" : "Not found"
+          },
+          "409" : {
+            "content" : {
+              "application/problem+json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ProblemDetail"
+                }
+              }
+            },
+            "description" : "Stale lockVersion, or workflow is archived"
+          },
+          "413" : {
+            "content" : {
+              "application/problem+json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ProblemDetail"
+                }
+              }
+            },
+            "description" : "Definition too large"
+          },
+          "422" : {
+            "content" : {
+              "application/problem+json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ProblemDetail"
+                }
+              }
+            },
+            "description" : "The resulting status is ACTIVE (activation, or saving an active workflow) but the graph is invalid; the Problem Detail carries the validation issues"
+          }
+        },
+        "summary" : "Replace a workflow's editable fields",
+        "tags" : [ "Workflows" ]
+      }
+    },
+    "/api/v1/workflows/{id}/activate" : {
+      "post" : {
+        "description" : "Sets status ACTIVE after validating the saved definition. Its webhook starts accepting deliveries / its schedule starts firing (next occurrence after now). Idempotent.",
+        "operationId" : "activate",
+        "parameters" : [ {
+          "in" : "path",
+          "name" : "id",
+          "required" : true,
+          "schema" : {
+            "format" : "uuid",
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/WorkflowResponse"
+                }
+              }
+            },
+            "description" : "Active"
+          },
+          "400" : {
+            "content" : {
+              "application/problem+json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ProblemDetail"
+                }
+              }
+            },
+            "description" : "Validation failed or invalid request"
+          },
+          "404" : {
+            "content" : {
+              "application/problem+json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ProblemDetail"
+                }
+              }
+            },
+            "description" : "Not found"
+          },
+          "409" : {
+            "content" : {
+              "application/problem+json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ProblemDetail"
+                }
+              }
+            },
+            "description" : "Workflow is archived"
+          },
+          "422" : {
+            "content" : {
+              "application/problem+json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ProblemDetail"
+                }
+              }
+            },
+            "description" : "The saved graph is invalid; the Problem Detail carries the issues"
+          }
+        },
+        "summary" : "Activate a workflow",
+        "tags" : [ "Workflows" ]
+      }
+    },
+    "/api/v1/workflows/{id}/deactivate" : {
+      "post" : {
+        "description" : "Sets an ACTIVE workflow to INACTIVE: its webhook answers 404 and its schedule stops. Runs already started continue. Webhook id and secret are kept for reactivation. Idempotent.",
+        "operationId" : "deactivate",
+        "parameters" : [ {
+          "in" : "path",
+          "name" : "id",
+          "required" : true,
+          "schema" : {
+            "format" : "uuid",
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/WorkflowResponse"
+                }
+              }
+            },
+            "description" : "Not active"
+          },
+          "400" : {
+            "content" : {
+              "application/problem+json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ProblemDetail"
+                }
+              }
+            },
+            "description" : "Validation failed or invalid request"
+          },
+          "404" : {
+            "content" : {
+              "application/problem+json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ProblemDetail"
+                }
+              }
+            },
+            "description" : "Not found"
+          },
+          "409" : {
+            "content" : {
+              "application/problem+json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ProblemDetail"
+                }
+              }
+            },
+            "description" : "Workflow is archived"
+          }
+        },
+        "summary" : "Deactivate a workflow",
+        "tags" : [ "Workflows" ]
+      }
+    },
+    "/api/v1/workflows/{id}/duplicate" : {
+      "post" : {
+        "description" : "The request body is optional.",
+        "operationId" : "duplicate",
+        "parameters" : [ {
+          "in" : "path",
+          "name" : "id",
+          "required" : true,
+          "schema" : {
+            "format" : "uuid",
+            "type" : "string"
+          }
+        } ],
+        "requestBody" : {
+          "content" : {
+            "*/*" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/DuplicateWorkflowRequest"
+              }
+            },
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/DuplicateWorkflowRequest"
+              }
+            }
+          }
+        },
+        "responses" : {
+          "201" : {
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/WorkflowResponse"
+                }
+              }
+            },
+            "description" : "Created; Location header points to the copy"
+          },
+          "400" : {
+            "content" : {
+              "application/problem+json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ProblemDetail"
+                }
+              }
+            },
+            "description" : "Validation failed or invalid request"
+          },
+          "404" : {
+            "content" : {
+              "application/problem+json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ProblemDetail"
+                }
+              }
+            },
+            "description" : "Not found"
+          }
+        },
+        "summary" : "Duplicate a workflow into a new DRAFT (version 1)",
+        "tags" : [ "Workflows" ]
+      }
+    },
+    "/api/v1/workflows/{id}/execute" : {
+      "post" : {
+        "description" : "Validates and snapshots the saved definition, queues the run and returns its id. Poll GET /executions/{executionId} for progress. Unsaved editor changes are not included.",
+        "operationId" : "execute",
+        "parameters" : [ {
+          "in" : "path",
+          "name" : "id",
+          "required" : true,
+          "schema" : {
+            "format" : "uuid",
+            "type" : "string"
+          }
+        } ],
+        "requestBody" : {
+          "content" : {
+            "*/*" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/ExecuteWorkflowRequest"
+              }
+            },
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/ExecuteWorkflowRequest"
+              }
+            }
+          }
+        },
+        "responses" : {
+          "202" : {
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ExecutionStartedResponse"
+                }
+              }
+            },
+            "description" : "Queued; Location points to the execution"
+          },
+          "404" : {
+            "content" : {
+              "application/problem+json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ProblemDetail"
+                }
+              }
+            },
+            "description" : "Workflow not found"
+          },
+          "409" : {
+            "content" : {
+              "application/problem+json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ProblemDetail"
+                }
+              }
+            },
+            "description" : "Workflow is archived"
+          },
+          "422" : {
+            "content" : {
+              "application/problem+json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ProblemDetail"
+                }
+              }
+            },
+            "description" : "Workflow is invalid (issues included)"
+          },
+          "501" : {
+            "content" : {
+              "application/problem+json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ProblemDetail"
+                }
+              }
+            },
+            "description" : "A node type has no executor yet"
+          },
+          "503" : {
+            "content" : {
+              "application/problem+json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ProblemDetail"
+                }
+              }
+            },
+            "description" : "Execution queue is full"
+          }
+        },
+        "summary" : "Execute the saved workflow asynchronously",
+        "tags" : [ "Executions" ]
+      }
+    },
+    "/api/v1/workflows/{id}/executions" : {
+      "get" : {
+        "description" : "Paginated, optionally filtered by status. Each row has the duration and node counts; history stays available after the workflow is edited or archived.",
+        "operationId" : "list_2",
+        "parameters" : [ {
+          "in" : "path",
+          "name" : "id",
+          "required" : true,
+          "schema" : {
+            "format" : "uuid",
+            "type" : "string"
+          }
+        }, {
+          "description" : "Repeatable status filter",
+          "in" : "query",
+          "name" : "status",
+          "required" : false,
+          "schema" : {
+            "items" : {
+              "enum" : [ "QUEUED", "RUNNING", "SUCCEEDED", "FAILED", "CANCELLED" ],
+              "type" : "string"
+            },
+            "type" : "array"
+          }
+        }, {
+          "description" : "Zero-based page index",
+          "in" : "query",
+          "name" : "page",
+          "required" : false,
+          "schema" : {
+            "default" : 0,
+            "format" : "int32",
+            "type" : "integer"
+          }
+        }, {
+          "description" : "Page size, 1..100",
+          "in" : "query",
+          "name" : "size",
+          "required" : false,
+          "schema" : {
+            "default" : 20,
+            "format" : "int32",
+            "type" : "integer"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/PageResponseExecutionSummaryResponse"
+                }
+              }
+            },
+            "description" : "A page of executions"
+          },
+          "404" : {
+            "content" : {
+              "application/problem+json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ProblemDetail"
+                }
+              }
+            },
+            "description" : "Workflow not found"
+          }
+        },
+        "summary" : "List a workflow's executions, newest first",
+        "tags" : [ "Executions" ]
+      }
+    },
+    "/api/v1/workflows/{id}/triggers" : {
+      "get" : {
+        "description" : "Webhook id, path, method and authentication mode; schedule next and last occurrence.",
+        "operationId" : "get_2",
+        "parameters" : [ {
+          "in" : "path",
+          "name" : "id",
+          "required" : true,
+          "schema" : {
+            "format" : "uuid",
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/TriggersResponse"
+                }
+              }
+            },
+            "description" : "Trigger state"
+          },
+          "404" : {
+            "content" : {
+              "application/problem+json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ProblemDetail"
+                }
+              }
+            },
+            "description" : "Workflow not found (or, for the secret endpoints, no webhook trigger)"
+          }
+        },
+        "summary" : "Get the trigger registration state",
+        "tags" : [ "Triggers" ]
+      }
+    },
+    "/api/v1/workflows/{id}/triggers/webhook/secret" : {
+      "get" : {
+        "description" : "Never cached (Cache-Control: no-store).",
+        "operationId" : "secret",
+        "parameters" : [ {
+          "in" : "path",
+          "name" : "id",
+          "required" : true,
+          "schema" : {
+            "format" : "uuid",
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/WebhookSecretResponse"
+                }
+              }
+            },
+            "description" : "The secret"
+          },
+          "404" : {
+            "content" : {
+              "application/problem+json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ProblemDetail"
+                }
+              }
+            },
+            "description" : "Workflow not found (or, for the secret endpoints, no webhook trigger)"
+          }
+        },
+        "summary" : "Reveal the webhook secret",
+        "tags" : [ "Triggers" ]
+      }
+    },
+    "/api/v1/workflows/{id}/triggers/webhook/secret/rotate" : {
+      "post" : {
+        "description" : "Generates a new secret; deliveries using the old one are rejected immediately.",
+        "operationId" : "rotate",
+        "parameters" : [ {
+          "in" : "path",
+          "name" : "id",
+          "required" : true,
+          "schema" : {
+            "format" : "uuid",
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/WebhookSecretResponse"
+                }
+              }
+            },
+            "description" : "The new secret"
+          },
+          "404" : {
+            "content" : {
+              "application/problem+json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ProblemDetail"
+                }
+              }
+            },
+            "description" : "Workflow not found (or, for the secret endpoints, no webhook trigger)"
+          }
+        },
+        "summary" : "Rotate the webhook secret",
+        "tags" : [ "Triggers" ]
+      }
+    },
+    "/api/v1/workflows/{id}/validate" : {
+      "post" : {
+        "description" : "Validates the definition in the request body (e.g. unsaved editor state) or, without a body, the stored definition. Always 200 for an existing workflow: check `valid` and `issues`.",
+        "operationId" : "validate",
+        "parameters" : [ {
+          "in" : "path",
+          "name" : "id",
+          "required" : true,
+          "schema" : {
+            "format" : "uuid",
+            "type" : "string"
+          }
+        } ],
+        "requestBody" : {
+          "content" : {
+            "*/*" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/ValidateWorkflowRequest"
+              }
+            },
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/ValidateWorkflowRequest"
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ValidationResultResponse"
+                }
+              }
+            },
+            "description" : "Validation result"
+          },
+          "400" : {
+            "content" : {
+              "application/problem+json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ProblemDetail"
+                }
+              }
+            },
+            "description" : "Validation failed or invalid request"
+          },
+          "404" : {
+            "content" : {
+              "application/problem+json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ProblemDetail"
+                }
+              }
+            },
+            "description" : "Not found"
+          }
+        },
+        "summary" : "Validate a workflow graph without executing it",
+        "tags" : [ "Workflows" ]
+      }
+    }
+  },
+  "tags" : [ {
+    "description" : "Create, read, update, duplicate and delete workflow definitions",
+    "name" : "Workflows"
+  }, {
+    "description" : "Ready-made example workflows",
+    "name" : "Samples"
+  }, {
+    "description" : "Read-only view of the server configuration",
+    "name" : "Settings"
+  }, {
+    "description" : "Run workflows and inspect or cancel their executions",
+    "name" : "Executions"
+  }, {
+    "description" : "Receive webhook deliveries for active workflows",
+    "name" : "Webhooks"
+  }, {
+    "description" : "Encrypted credentials for external integrations (secrets are write-only)",
+    "name" : "Credentials"
+  }, {
+    "description" : "Webhook and schedule trigger registrations of a workflow",
+    "name" : "Triggers"
+  } ]
+}

@@ -1,0 +1,146 @@
+{
+  "description": "Response schemas for the AI Model node: accepted by the restricted policy, or rejected. Shared by ResponseSchemaPolicyTest (backend) and responseSchemaPolicy.test.ts (frontend).",
+  "valid": [
+    {
+      "type": "object"
+    },
+    {
+      "type": "object",
+      "required": [
+        "a"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "a": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "maxLength": 10
+        },
+        "b": {
+          "type": "array",
+          "items": {
+            "enum": [
+              1,
+              2
+            ]
+          },
+          "minItems": 1,
+          "uniqueItems": true
+        },
+        "c": {
+          "oneOf": [
+            {
+              "type": "integer",
+              "minimum": 0
+            },
+            {
+              "const": "n/a"
+            }
+          ]
+        }
+      },
+      "title": "T",
+      "description": "d"
+    },
+    {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "n": {
+            "type": "number",
+            "exclusiveMinimum": 0
+          }
+        }
+      }
+    },
+    {
+      "minLength": 0,
+      "maxLength": 2.0,
+      "minItems": 0,
+      "maxItems": 2.0,
+      "minimum": -1.5
+    }
+  ],
+  "invalid": [
+    {
+      "$ref": "http://169.254.169.254/"
+    },
+    {
+      "type": "object",
+      "properties": {
+        "a": {
+          "type": "string",
+          "pattern": "(a+)+$"
+        }
+      }
+    },
+    {
+      "type": "string",
+      "format": "email"
+    },
+    {
+      "$schema": "x",
+      "$id": "y"
+    },
+    {
+      "if": {},
+      "then": {}
+    },
+    {
+      "type": "date"
+    },
+    {
+      "required": "a"
+    },
+    {
+      "properties": []
+    },
+    {
+      "properties": {
+        "a": true
+      }
+    },
+    {
+      "minimum": "1"
+    },
+    {
+      "enum": []
+    },
+    {
+      "anyOf": []
+    },
+    {
+      "additionalProperties": "no"
+    },
+    {
+      "description": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+    },
+    {
+      "minLength": -1
+    },
+    {
+      "minLength": 1.5
+    },
+    {
+      "maxLength": -1
+    },
+    {
+      "maxLength": 1.5
+    },
+    {
+      "minItems": -1
+    },
+    {
+      "minItems": 1.5
+    },
+    {
+      "maxItems": -1
+    },
+    {
+      "maxItems": 1.5
+    }
+  ]
+}

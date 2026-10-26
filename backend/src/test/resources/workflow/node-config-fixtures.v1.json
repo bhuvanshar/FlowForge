@@ -1,0 +1,833 @@
+{
+  "$comment": "Shared contract fixtures: every config must be accepted (valid) or rejected (invalid) by node-config.v1.schema.json AND by the frontend Zod validation. Used by backend NodeConfigSchemaTest and frontend configContract.test.ts.",
+  "cases": {
+    "core.manualTrigger": {
+      "valid": [
+        {},
+        {
+          "testInput": {
+            "a": 1,
+            "b": [
+              1,
+              2,
+              {
+                "c": null
+              }
+            ]
+          }
+        },
+        {
+          "testInput": [
+            1,
+            2
+          ]
+        }
+      ],
+      "invalid": [
+        {
+          "testInput": "text"
+        },
+        {
+          "testInput": 5
+        },
+        {
+          "extra": 1
+        }
+      ]
+    },
+    "core.setVariables": {
+      "valid": [
+        {
+          "variables": [
+            {
+              "name": "user_id",
+              "value": "{{ input.user.id }}"
+            }
+          ]
+        },
+        {
+          "variables": [
+            {
+              "name": "a",
+              "value": "plain"
+            },
+            {
+              "name": "b",
+              "value": "x {{vars.a[0].b}} y { not a ref }"
+            }
+          ]
+        }
+      ],
+      "invalid": [
+        {},
+        {
+          "variables": []
+        },
+        {
+          "variables": [
+            {
+              "name": "1bad",
+              "value": "x"
+            }
+          ]
+        },
+        {
+          "variables": [
+            {
+              "name": "a",
+              "value": "{{ foo() }}"
+            }
+          ]
+        },
+        {
+          "variables": [
+            {
+              "name": "a",
+              "value": "{{ unterminated"
+            }
+          ]
+        },
+        {
+          "variables": [
+            {
+              "name": "a"
+            }
+          ]
+        },
+        {
+          "variables": [
+            {
+              "name": "a",
+              "value": "x",
+              "extra": 1
+            }
+          ]
+        },
+        {
+          "variables": [
+            {
+              "name": "a",
+              "value": "{{ a + b }}"
+            }
+          ]
+        },
+        {
+          "variables": [
+            {
+              "name": "a",
+              "value": "{{ 'x' }}"
+            }
+          ]
+        }
+      ]
+    },
+    "core.condition": {
+      "valid": [
+        {
+          "field": "order.total",
+          "operator": "greaterThan",
+          "value": "100"
+        },
+        {
+          "field": "{{ input.flag }}",
+          "operator": "isEmpty"
+        },
+        {
+          "field": "a",
+          "operator": "equals",
+          "value": "{{ vars.b }}"
+        }
+      ],
+      "invalid": [
+        {},
+        {
+          "field": "a",
+          "operator": "equals"
+        },
+        {
+          "field": "a",
+          "operator": "isEmpty",
+          "value": "x"
+        },
+        {
+          "field": "a",
+          "operator": "bogus",
+          "value": "1"
+        },
+        {
+          "field": "",
+          "operator": "equals",
+          "value": "1"
+        },
+        {
+          "field": "a",
+          "operator": "equals",
+          "value": ""
+        },
+        {
+          "field": "a",
+          "operator": "equals",
+          "value": "{{ x() }}"
+        }
+      ]
+    },
+    "core.transform": {
+      "valid": [
+        {
+          "operations": [
+            {
+              "field": "upper",
+              "source": "{{ input.name }}",
+              "operation": "toUpperCase"
+            },
+            {
+              "field": "n",
+              "source": "42",
+              "operation": "toNumber"
+            }
+          ]
+        }
+      ],
+      "invalid": [
+        {},
+        {
+          "operations": []
+        },
+        {
+          "operations": [
+            {
+              "field": "x y",
+              "source": "a",
+              "operation": "trim"
+            }
+          ]
+        },
+        {
+          "operations": [
+            {
+              "field": "a",
+              "source": "{{ a + b }}",
+              "operation": "trim"
+            }
+          ]
+        },
+        {
+          "operations": [
+            {
+              "field": "a",
+              "source": "a",
+              "operation": "eval"
+            }
+          ]
+        },
+        {
+          "operations": [
+            {
+              "field": "a",
+              "source": "",
+              "operation": "trim"
+            }
+          ]
+        }
+      ]
+    },
+    "core.logger": {
+      "valid": [
+        {
+          "message": "Hello {{ input.name }}"
+        },
+        {
+          "message": "multi\nline {braces}"
+        }
+      ],
+      "invalid": [
+        {},
+        {
+          "message": ""
+        },
+        {
+          "message": "{{ process.exit() }}"
+        },
+        {
+          "message": "{{"
+        },
+        {
+          "message": "ok",
+          "level": "info"
+        }
+      ]
+    },
+    "core.httpRequest": {
+      "valid": [
+        {
+          "method": "GET",
+          "url": "https://api.example.com/x",
+          "headers": [],
+          "query": [],
+          "timeoutSeconds": 30
+        },
+        {
+          "method": "POST",
+          "url": "{{ vars.base }}/items",
+          "headers": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "query": [
+            {
+              "name": "q",
+              "value": "{{ input.q }}"
+            }
+          ],
+          "body": {
+            "a": [
+              "{{ input.x }}",
+              1,
+              null,
+              true,
+              {
+                "b": 2
+              }
+            ]
+          },
+          "timeoutSeconds": 300
+        },
+        {
+          "method": "DELETE",
+          "url": "http://localhost:8080/x",
+          "headers": [],
+          "query": [],
+          "timeoutSeconds": 1
+        },
+        {
+          "method": "GET",
+          "url": "https://api.example.com/me",
+          "headers": [],
+          "query": [],
+          "timeoutSeconds": 30,
+          "credentialId": "3f2b8c1e-5d4a-4b6f-9e7d-1a2b3c4d5e6f"
+        }
+      ],
+      "invalid": [
+        {
+          "method": "GET",
+          "headers": [],
+          "query": [],
+          "timeoutSeconds": 30
+        },
+        {
+          "method": "GET",
+          "url": "ftp://x",
+          "headers": [],
+          "query": [],
+          "timeoutSeconds": 30
+        },
+        {
+          "method": "GET",
+          "url": "",
+          "headers": [],
+          "query": [],
+          "timeoutSeconds": 30
+        },
+        {
+          "method": "FETCH",
+          "url": "https://x.io",
+          "headers": [],
+          "query": [],
+          "timeoutSeconds": 30
+        },
+        {
+          "method": "GET",
+          "url": "https://x.io",
+          "headers": [],
+          "query": [],
+          "timeoutSeconds": 0
+        },
+        {
+          "method": "GET",
+          "url": "https://x.io",
+          "headers": [],
+          "query": [],
+          "timeoutSeconds": 301
+        },
+        {
+          "method": "GET",
+          "url": "https://x.io",
+          "headers": [],
+          "query": [],
+          "timeoutSeconds": 1.5
+        },
+        {
+          "method": "GET",
+          "url": "https://x.io",
+          "headers": [],
+          "query": [],
+          "timeoutSeconds": "30"
+        },
+        {
+          "method": "GET",
+          "url": "https://x.io",
+          "headers": [
+            {
+              "name": "Bad Name",
+              "value": "x"
+            }
+          ],
+          "query": [],
+          "timeoutSeconds": 30
+        },
+        {
+          "method": "GET",
+          "url": "https://x.io",
+          "headers": [],
+          "query": [],
+          "body": {
+            "a": 1
+          },
+          "timeoutSeconds": 30
+        },
+        {
+          "method": "HEAD",
+          "url": "https://x.io",
+          "headers": [],
+          "query": [],
+          "body": {},
+          "timeoutSeconds": 30
+        },
+        {
+          "method": "POST",
+          "url": "https://x.io",
+          "headers": [],
+          "query": [],
+          "body": {
+            "a": "{{ x() }}"
+          },
+          "timeoutSeconds": 30
+        },
+        {
+          "method": "POST",
+          "url": "https://x.io",
+          "headers": [],
+          "query": [],
+          "timeoutSeconds": 30,
+          "extra": 1
+        },
+        {
+          "method": "POST",
+          "url": "https://x.io",
+          "query": [],
+          "timeoutSeconds": 30
+        },
+        {
+          "method": "POST",
+          "url": "https://x.io {{ a b }}",
+          "headers": [],
+          "query": [],
+          "timeoutSeconds": 30
+        },
+        {
+          "method": "GET",
+          "url": "https://api.example.com/me",
+          "headers": [],
+          "query": [],
+          "timeoutSeconds": 30,
+          "credentialId": "my-token"
+        },
+        {
+          "method": "GET",
+          "url": "https://api.example.com/me",
+          "headers": [],
+          "query": [],
+          "timeoutSeconds": 30,
+          "credentialId": "3F2B8C1E-5D4A-4B6F-9E7D-1A2B3C4D5E6F"
+        }
+      ]
+    },
+    "core.webhookTrigger": {
+      "valid": [
+        {
+          "method": "POST",
+          "authentication": "signature",
+          "inputMode": "body"
+        },
+        {
+          "method": "GET",
+          "authentication": "token",
+          "inputMode": "request",
+          "testInput": {
+            "a": 1
+          }
+        },
+        {
+          "method": "PUT",
+          "authentication": "token",
+          "inputMode": "body"
+        }
+      ],
+      "invalid": [
+        {},
+        {
+          "method": "POST",
+          "authentication": "signature"
+        },
+        {
+          "method": "TRACE",
+          "authentication": "token",
+          "inputMode": "body"
+        },
+        {
+          "method": "POST",
+          "authentication": "basic",
+          "inputMode": "body"
+        },
+        {
+          "method": "POST",
+          "authentication": "token",
+          "inputMode": "raw"
+        },
+        {
+          "method": "POST",
+          "authentication": "token",
+          "inputMode": "body",
+          "secret": "x"
+        },
+        {
+          "method": "POST",
+          "authentication": "token",
+          "inputMode": "body",
+          "testInput": "text"
+        }
+      ]
+    },
+    "core.scheduleTrigger": {
+      "valid": [
+        {
+          "cron": "0 * * * *",
+          "timezone": "UTC",
+          "missedRunPolicy": "skip"
+        },
+        {
+          "cron": "*/15 9-17 * * MON-FRI",
+          "timezone": "Europe/Berlin",
+          "missedRunPolicy": "runOnce"
+        },
+        {
+          "cron": "0 0 12 * * ?",
+          "timezone": "America/New_York",
+          "missedRunPolicy": "skip",
+          "testInput": [
+            1
+          ]
+        }
+      ],
+      "invalid": [
+        {},
+        {
+          "cron": "* * *",
+          "timezone": "UTC",
+          "missedRunPolicy": "skip"
+        },
+        {
+          "cron": "* * * * * * *",
+          "timezone": "UTC",
+          "missedRunPolicy": "skip"
+        },
+        {
+          "cron": "0 * * * *",
+          "timezone": "",
+          "missedRunPolicy": "skip"
+        },
+        {
+          "cron": "0 * * * *",
+          "timezone": "Europe/Berlin; rm -rf",
+          "missedRunPolicy": "skip"
+        },
+        {
+          "cron": "0 * * * *",
+          "timezone": "UTC",
+          "missedRunPolicy": "catchUpAll"
+        },
+        {
+          "cron": "0 * * * *",
+          "timezone": "UTC"
+        },
+        {
+          "cron": "0 * * * *",
+          "timezone": "UTC",
+          "missedRunPolicy": "skip",
+          "extra": 1
+        }
+      ]
+    },
+    "core.aiModel": {
+      "valid": [
+        {
+          "provider": "openaiCompatible",
+          "baseUrl": "https://api.openai.com/v1",
+          "model": "gpt-4o-mini",
+          "userPrompt": "Summarize: {{ input.text }}",
+          "responseFormat": "text",
+          "timeoutSeconds": 60,
+          "maxRetries": 2
+        },
+        {
+          "provider": "openaiCompatible",
+          "baseUrl": "https://api.openai.com/v1",
+          "model": "gpt-4o-mini",
+          "userPrompt": "Summarize: {{ input.text }}",
+          "responseFormat": "text",
+          "timeoutSeconds": 60,
+          "maxRetries": 2,
+          "credentialId": "3f2b8c1e-5d4a-4b6f-9e7d-1a2b3c4d5e6f",
+          "systemPrompt": "You are terse.",
+          "temperature": 0.2,
+          "maxTokens": 500
+        },
+        {
+          "provider": "openaiCompatible",
+          "baseUrl": "https://api.openai.com/v1",
+          "model": "gpt-4o-mini",
+          "userPrompt": "Summarize: {{ input.text }}",
+          "responseFormat": "json",
+          "timeoutSeconds": 60,
+          "maxRetries": 2,
+          "jsonMode": "jsonObject",
+          "responseSchema": {
+            "type": "object",
+            "required": [
+              "sentiment"
+            ],
+            "properties": {
+              "sentiment": {
+                "enum": [
+                  "positive",
+                  "negative",
+                  "neutral"
+                ]
+              }
+            },
+            "additionalProperties": false
+          }
+        },
+        {
+          "provider": "openaiCompatible",
+          "baseUrl": "http://localhost:11434/v1",
+          "model": "llama3.1:8b",
+          "userPrompt": "Summarize: {{ input.text }}",
+          "responseFormat": "json",
+          "timeoutSeconds": 60,
+          "maxRetries": 0,
+          "jsonMode": "prompt",
+          "temperature": 0
+        }
+      ],
+      "invalid": [
+        {},
+        {
+          "provider": "openaiCompatible",
+          "baseUrl": "https://api.openai.com/v1",
+          "model": "gpt-4o-mini",
+          "responseFormat": "text",
+          "timeoutSeconds": 60,
+          "maxRetries": 2
+        },
+        {
+          "provider": "openaiCompatible",
+          "baseUrl": "https://api.openai.com/v1",
+          "model": "gpt-4o-mini",
+          "userPrompt": "",
+          "responseFormat": "text",
+          "timeoutSeconds": 60,
+          "maxRetries": 2
+        },
+        {
+          "provider": "anthropic",
+          "baseUrl": "https://api.openai.com/v1",
+          "model": "gpt-4o-mini",
+          "userPrompt": "Summarize: {{ input.text }}",
+          "responseFormat": "text",
+          "timeoutSeconds": 60,
+          "maxRetries": 2
+        },
+        {
+          "provider": "openaiCompatible",
+          "baseUrl": "ftp://example.com",
+          "model": "gpt-4o-mini",
+          "userPrompt": "Summarize: {{ input.text }}",
+          "responseFormat": "text",
+          "timeoutSeconds": 60,
+          "maxRetries": 2
+        },
+        {
+          "provider": "openaiCompatible",
+          "baseUrl": "https://api.example.com/v1?key=abc",
+          "model": "gpt-4o-mini",
+          "userPrompt": "Summarize: {{ input.text }}",
+          "responseFormat": "text",
+          "timeoutSeconds": 60,
+          "maxRetries": 2
+        },
+        {
+          "provider": "openaiCompatible",
+          "baseUrl": "https://{{ vars.host }}/v1",
+          "model": "gpt-4o-mini",
+          "userPrompt": "Summarize: {{ input.text }}",
+          "responseFormat": "text",
+          "timeoutSeconds": 60,
+          "maxRetries": 2
+        },
+        {
+          "provider": "openaiCompatible",
+          "baseUrl": "https://api.openai.com/v1",
+          "model": "bad model",
+          "userPrompt": "Summarize: {{ input.text }}",
+          "responseFormat": "text",
+          "timeoutSeconds": 60,
+          "maxRetries": 2
+        },
+        {
+          "provider": "openaiCompatible",
+          "baseUrl": "https://api.openai.com/v1",
+          "model": "gpt-4o-mini",
+          "userPrompt": "{{ eval(x) }}",
+          "responseFormat": "text",
+          "timeoutSeconds": 60,
+          "maxRetries": 2
+        },
+        {
+          "provider": "openaiCompatible",
+          "baseUrl": "https://api.openai.com/v1",
+          "model": "gpt-4o-mini",
+          "userPrompt": "Summarize: {{ input.text }}",
+          "responseFormat": "text",
+          "timeoutSeconds": 60,
+          "maxRetries": 2,
+          "systemPrompt": "{{ a.b( }}"
+        },
+        {
+          "provider": "openaiCompatible",
+          "baseUrl": "https://api.openai.com/v1",
+          "model": "gpt-4o-mini",
+          "userPrompt": "Summarize: {{ input.text }}",
+          "responseFormat": "text",
+          "timeoutSeconds": 60,
+          "maxRetries": 2,
+          "temperature": 2.5
+        },
+        {
+          "provider": "openaiCompatible",
+          "baseUrl": "https://api.openai.com/v1",
+          "model": "gpt-4o-mini",
+          "userPrompt": "Summarize: {{ input.text }}",
+          "responseFormat": "text",
+          "timeoutSeconds": 60,
+          "maxRetries": 2,
+          "maxTokens": 0
+        },
+        {
+          "provider": "openaiCompatible",
+          "baseUrl": "https://api.openai.com/v1",
+          "model": "gpt-4o-mini",
+          "userPrompt": "Summarize: {{ input.text }}",
+          "responseFormat": "text",
+          "timeoutSeconds": 60,
+          "maxRetries": 2,
+          "maxTokens": 100000
+        },
+        {
+          "provider": "openaiCompatible",
+          "baseUrl": "https://api.openai.com/v1",
+          "model": "gpt-4o-mini",
+          "userPrompt": "Summarize: {{ input.text }}",
+          "responseFormat": "text",
+          "timeoutSeconds": 0,
+          "maxRetries": 2
+        },
+        {
+          "provider": "openaiCompatible",
+          "baseUrl": "https://api.openai.com/v1",
+          "model": "gpt-4o-mini",
+          "userPrompt": "Summarize: {{ input.text }}",
+          "responseFormat": "text",
+          "timeoutSeconds": 60,
+          "maxRetries": 4
+        },
+        {
+          "provider": "openaiCompatible",
+          "baseUrl": "https://api.openai.com/v1",
+          "model": "gpt-4o-mini",
+          "userPrompt": "Summarize: {{ input.text }}",
+          "responseFormat": "xml",
+          "timeoutSeconds": 60,
+          "maxRetries": 2
+        },
+        {
+          "provider": "openaiCompatible",
+          "baseUrl": "https://api.openai.com/v1",
+          "model": "gpt-4o-mini",
+          "userPrompt": "Summarize: {{ input.text }}",
+          "responseFormat": "text",
+          "timeoutSeconds": 60,
+          "maxRetries": 2,
+          "jsonMode": "jsonObject"
+        },
+        {
+          "provider": "openaiCompatible",
+          "baseUrl": "https://api.openai.com/v1",
+          "model": "gpt-4o-mini",
+          "userPrompt": "Summarize: {{ input.text }}",
+          "responseFormat": "text",
+          "timeoutSeconds": 60,
+          "maxRetries": 2,
+          "responseSchema": {
+            "type": "object",
+            "required": [
+              "sentiment"
+            ],
+            "properties": {
+              "sentiment": {
+                "enum": [
+                  "positive",
+                  "negative",
+                  "neutral"
+                ]
+              }
+            },
+            "additionalProperties": false
+          }
+        },
+        {
+          "provider": "openaiCompatible",
+          "baseUrl": "https://api.openai.com/v1",
+          "model": "gpt-4o-mini",
+          "userPrompt": "Summarize: {{ input.text }}",
+          "responseFormat": "text",
+          "timeoutSeconds": 60,
+          "maxRetries": 2,
+          "extra": "x"
+        },
+        {
+          "provider": "openaiCompatible",
+          "baseUrl": "https://api.openai.com/v1",
+          "model": "gpt-4o-mini",
+          "userPrompt": "Summarize: {{ input.text }}",
+          "responseFormat": "text",
+          "timeoutSeconds": 60,
+          "maxRetries": 2,
+          "credentialId": "my-key"
+        },
+        {
+          "provider": "openaiCompatible",
+          "baseUrl": "https://api.openai.com/v1",
+          "model": "gpt-4o-mini",
+          "userPrompt": "Summarize: {{ input.text }}",
+          "responseFormat": "json",
+          "timeoutSeconds": 60,
+          "maxRetries": 2
+        }
+      ]
+    }
+  }
+}

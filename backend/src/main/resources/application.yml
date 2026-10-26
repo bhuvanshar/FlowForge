@@ -1,0 +1,125 @@
+spring:
+  application:
+    name: flowforge
+  lifecycle:
+    # Graceful stop: running executions get this long to finish, then they are interrupted and recorded as
+    # EXECUTION_INTERRUPTED. Each shutdown phase (executions, then open HTTP/SSE requests) may take this long, so two of
+    # them must fit in the container's stop_grace_period (30 s in infra/docker-compose.yml).
+    timeout-per-shutdown-phase: 12s
+  profiles:
+    default: dev
+  datasource:
+    url: ${DB_URL:jdbc:postgresql://localhost:5432/flowforge}
+    username: ${DB_USERNAME:flowforge}
+    password: ${DB_PASSWORD:flowforge}
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: validate
+    properties:
+      hibernate:
+        jdbc:
+          time_zone: UTC
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+  mvc:
+    problemdetails:
+      enabled: true
+    # No endpoint accepts form bodies; without this filter, PUT/PATCH/DELETE form bodies would be consumed before the
+    # webhook endpoint can apply its size limit and JSON-only rule.
+    formcontent:
+      filter:
+        enabled: false
+  jackson:
+    deserialization:
+      # The workflow JSON Schema forbids unknown properties; reject them in requests instead of silently dropping.
+      fail-on-unknown-properties: true
+
+server:
+  # Localhost-only by default (single-user MVP). Containers override with SERVER_ADDRESS=0.0.0.0
+  # and rely on 127.0.0.1-only host port bindings in infra/docker-compose.yml.
+  address: ${SERVER_ADDRESS:127.0.0.1}
+  port: ${SERVER_PORT:8080}
+  max-http-request-header-size: 16KB
+  error:
+    include-stacktrace: never
+    include-message: never
+    include-binding-errors: never
+    whitelabel:
+      enabled: false
+  tomcat:
+    # Bodies of rejected requests are not drained beyond this.
+    max-swallow-size: 2MB
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+  endpoint:
+    health:
+      show-details: never
+      probes:
+        enabled: true
+
+flowforge:
+  version: "@project.version@"
+  execution:
+    worker-threads: ${FLOWFORGE_EXECUTION_WORKERS:2}
+    queue-capacity: 100
+    node-timeout: 30s
+    max-duration: 10m
+    max-stored-payload-bytes: 262144
+    max-active-per-workflow: ${FLOWFORGE_EXECUTION_MAX_ACTIVE_PER_WORKFLOW:10}
+  http:
+    # Outbound HTTP Request node. Deny by default: only these hosts may be called ("api.example.com" or
+    # "*.example.com" for subdomains). Comma-separated in the environment variable.
+    allowed-hosts: ${FLOWFORGE_HTTP_ALLOWED_HOSTS:}
+    # Loopback, private, link-local, CGNAT, multicast and other non-public addresses are blocked even for allowed hosts.
+    allow-private-addresses: ${FLOWFORGE_HTTP_ALLOW_PRIVATE_ADDRESSES:false}
+    # Empty = any port.
+    allowed-ports: ${FLOWFORGE_HTTP_ALLOWED_PORTS:}
+    max-response-bytes: 1048576
+    max-redirects: 3
+    connect-timeout: 5s
+    max-request-bytes: 1048576
+  ai:
+    # AI Model node. Which hosts it may call is decided by flowforge.http.allowed-hosts (same allowlist and non-public
+    # address protection as the HTTP Request node), e.g. FLOWFORGE_HTTP_ALLOWED_HOSTS=api.openai.com.
+    max-prompt-chars: 100000
+    max-response-bytes: 1048576
+    retry-base-delay: 500ms
+    retry-max-delay: 8s
+    max-retry-after: 10s
+  credentials:
+    # AES-256-GCM keys, never in the database or the repository: "keyId:base64Key[,keyId:base64Key]" (generate with
+    # openssl rand -base64 32) and/or a key file with one keyId:base64Key per line. Empty = credentials disabled.
+    keys: ${FLOWFORGE_CREDENTIALS_KEYS:}
+    key-file: ${FLOWFORGE_CREDENTIALS_KEY_FILE:}
+    # Key for new encryptions; default: the last key listed.
+    active-key-id: ${FLOWFORGE_CREDENTIALS_ACTIVE_KEY_ID:}
+  security:
+    # Host header values the server answers to (DNS rebinding protection). Add a tunnel's public name for webhooks.
+    allowed-host-names: ${FLOWFORGE_ALLOWED_HOST_NAMES:localhost,127.0.0.1,[::1]}
+    max-request-bytes: 1048576
+  triggers:
+    # Webhook triggers must authenticate (HMAC signature or token). Set to true only to allow authentication "none",
+    # e.g. on an isolated network; the server binds to 127.0.0.1 by default either way.
+    allow-unauthenticated-webhooks: ${FLOWFORGE_WEBHOOKS_ALLOW_UNAUTHENTICATED:false}
+    webhook-max-body-bytes: 262144
+    signature-tolerance: 5m
+    replay-cache-size: 10000
+    # Single instance only: run the scheduler in exactly one backend process per database.
+    scheduler-enabled: ${FLOWFORGE_SCHEDULER_ENABLED:true}
+    scheduler-poll-interval: 5s
+    missed-run-grace: 60s
+    scheduler-batch-size: 50
+  allowed-origins: ${FLOWFORGE_ALLOWED_ORIGINS:http://localhost:5173,http://127.0.0.1:5173}
+
+springdoc:
+  api-docs:
+    path: /v3/api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+  paths-to-match: /api/v1/**

@@ -1,0 +1,149 @@
+{
+  "$comment": "Canonical catalog of node types known to the editor, version 1. Type identifiers must match WorkflowDefinition.NODE_TYPE_PATTERN. Handles are the connection points an edge's sourceHandle/targetHandle may reference. The frontend registry (frontend/src/features/editor/nodeTypes.ts) is tested against this file; the backend node registry (later module) must implement exactly these types. Each node type's configuration schema is $defs/<type> in node-config.v1.schema.json. defaultConfiguration is what a newly created node starts with; it may be incomplete (invalid) on purpose, and is completed by the user before the workflow is activated. role: 'trigger' nodes start a workflow (no inputs; exactly one per workflow); 'action' nodes run when reached.",
+  "catalogVersion": 1,
+  "nodeTypes": [
+    {
+      "type": "core.manualTrigger",
+      "typeVersion": 1,
+      "label": "Manual Trigger",
+      "role": "trigger",
+      "inputs": [],
+      "outputs": [
+        "main"
+      ],
+      "defaultConfiguration": {}
+    },
+    {
+      "type": "core.webhookTrigger",
+      "typeVersion": 1,
+      "label": "Webhook Trigger",
+      "role": "trigger",
+      "inputs": [],
+      "outputs": [
+        "main"
+      ],
+      "defaultConfiguration": {
+        "method": "POST",
+        "authentication": "signature",
+        "inputMode": "body"
+      }
+    },
+    {
+      "type": "core.scheduleTrigger",
+      "typeVersion": 1,
+      "label": "Schedule Trigger",
+      "role": "trigger",
+      "inputs": [],
+      "outputs": [
+        "main"
+      ],
+      "defaultConfiguration": {
+        "cron": "0 * * * *",
+        "timezone": "UTC",
+        "missedRunPolicy": "skip"
+      }
+    },
+    {
+      "type": "core.setVariables",
+      "typeVersion": 1,
+      "label": "Set Variables",
+      "role": "action",
+      "inputs": [
+        "main"
+      ],
+      "outputs": [
+        "main"
+      ],
+      "defaultConfiguration": {
+        "variables": []
+      }
+    },
+    {
+      "type": "core.condition",
+      "typeVersion": 1,
+      "label": "Condition",
+      "role": "action",
+      "inputs": [
+        "main"
+      ],
+      "outputs": [
+        "true",
+        "false"
+      ],
+      "defaultConfiguration": {
+        "field": "",
+        "operator": "equals",
+        "value": ""
+      }
+    },
+    {
+      "type": "core.transform",
+      "typeVersion": 1,
+      "label": "Transform",
+      "role": "action",
+      "inputs": [
+        "main"
+      ],
+      "outputs": [
+        "main"
+      ],
+      "defaultConfiguration": {
+        "operations": []
+      }
+    },
+    {
+      "type": "core.logger",
+      "typeVersion": 1,
+      "label": "Logger",
+      "role": "action",
+      "inputs": [
+        "main"
+      ],
+      "outputs": [
+        "main"
+      ],
+      "defaultConfiguration": {
+        "message": ""
+      }
+    },
+    {
+      "type": "core.httpRequest",
+      "typeVersion": 1,
+      "label": "HTTP Request",
+      "role": "action",
+      "inputs": [
+        "main"
+      ],
+      "outputs": [
+        "main"
+      ],
+      "defaultConfiguration": {
+        "method": "GET",
+        "url": "",
+        "headers": [],
+        "query": [],
+        "timeoutSeconds": 30
+      }
+    },
+    {
+      "type": "core.aiModel",
+      "typeVersion": 1,
+      "label": "AI Model",
+      "role": "action",
+      "inputs": [
+        "main"
+      ],
+      "outputs": [
+        "main"
+      ],
+      "defaultConfiguration": {
+        "provider": "openaiCompatible",
+        "baseUrl": "https://api.openai.com/v1",
+        "model": "gpt-4o-mini",
+        "responseFormat": "text",
+        "timeoutSeconds": 60,
+        "maxRetries": 2
+      }
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+logging:
+  level:
+    root: INFO
+    com.flowforge: INFO
+
+# API documentation is a development aid; production does not expose it.
+springdoc:
+  api-docs:
+    enabled: false
+  swagger-ui:
+    enabled: false

@@ -1,0 +1,16 @@
+logging:
+  level:
+    com.flowforge: INFO
+
+flowforge:
+  http:
+    # Integration tests call a local HTTP server.
+    allowed-hosts: localhost,127.0.0.1
+    allow-private-addresses: true
+  triggers:
+    # Tests drive the scheduler explicitly (ScheduleRunner.tick) with chosen instants.
+    scheduler-enabled: false
+  ai:
+    # Retries in tests must not wait half a second.
+    retry-base-delay: 10ms
+    retry-max-delay: 40ms

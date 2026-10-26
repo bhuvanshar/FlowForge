@@ -1,0 +1,8 @@
+# The image installs its own (Linux) dependencies with npm ci; host node_modules and build output must not leak in.
+node_modules/
+dist/
+coverage/
+*.tsbuildinfo
+.vite/
+.vitest-cache/
+.DS_Store

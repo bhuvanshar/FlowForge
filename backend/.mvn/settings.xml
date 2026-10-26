@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Applied by .mvn/maven.config. Every dependency comes from Maven Central only: Flyway's parent POM declares extra
+  repositories (repo.gradle.org, an S3 bucket, GitHub Packages) that Maven would otherwise query for every artifact, which
+  is slow and widens the supply chain. User settings (~/.m2/settings.xml) still apply on top of this file.
+-->
+<settings xmlns="http://maven.apache.org/SETTINGS/1.2.0"
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.2.0 https://maven.apache.org/xsd/settings-1.2.0.xsd">
+  <mirrors>
+    <mirror>
+      <id>central</id>
+      <name>Maven Central for every repository</name>
+      <url>https://repo.maven.apache.org/maven2</url>
+      <mirrorOf>*</mirrorOf>
+    </mirror>
+  </mirrors>
+</settings>

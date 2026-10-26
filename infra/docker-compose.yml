@@ -1,0 +1,93 @@
+# FlowForge local stack. All published ports bind to 127.0.0.1 only (single-user, localhost MVP).
+#
+#   docker compose --env-file .env up -d postgres               # database only (run backend/frontend on host)
+#   docker compose --env-file .env --profile app up -d --build  # full stack in containers
+name: flowforge
+
+# Bounded container logs (json-file rotation), shared by every service.
+x-logging: &logging
+  driver: json-file
+  options:
+    max-size: "10m"
+    max-file: "5"
+
+services:
+  postgres:
+    logging: *logging
+    image: postgres:16-alpine@sha256:0cefaabd882e42bcb2a2f3dc56d3ce4770560ba62fd7f197f1a2e008fd5731ab
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-flowforge}
+      POSTGRES_USER: ${POSTGRES_USER:-flowforge}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD in infra/.env}
+    ports:
+      - "127.0.0.1:${POSTGRES_PORT:-5432}:5432"
+    volumes:
+      - flowforge-pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 3s
+      retries: 12
+      start_period: 5s
+
+  backend:
+    logging: *logging
+    profiles: ["app"]
+    build:
+      context: ../backend
+    restart: unless-stopped
+    # Time for running executions to be recorded as interrupted before the container is killed.
+    stop_grace_period: 30s
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      SPRING_PROFILES_ACTIVE: ${SPRING_PROFILES_ACTIVE:-prod}
+      DB_URL: jdbc:postgresql://postgres:5432/${POSTGRES_DB:-flowforge}
+      DB_USERNAME: ${POSTGRES_USER:-flowforge}
+      DB_PASSWORD: ${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD in infra/.env}
+      SERVER_ADDRESS: 0.0.0.0
+      FLOWFORGE_ALLOWED_ORIGINS: http://localhost:${FRONTEND_PORT:-5173},http://127.0.0.1:${FRONTEND_PORT:-5173}
+      # HTTP Request node: outbound allowlist (empty = no outbound HTTP) and private-address protection.
+      FLOWFORGE_HTTP_ALLOWED_HOSTS: ${FLOWFORGE_HTTP_ALLOWED_HOSTS:-}
+      FLOWFORGE_HTTP_ALLOW_PRIVATE_ADDRESSES: ${FLOWFORGE_HTTP_ALLOW_PRIVATE_ADDRESSES:-false}
+      FLOWFORGE_HTTP_ALLOWED_PORTS: ${FLOWFORGE_HTTP_ALLOWED_PORTS:-}
+      FLOWFORGE_EXECUTION_WORKERS: ${FLOWFORGE_EXECUTION_WORKERS:-2}
+      FLOWFORGE_EXECUTION_MAX_ACTIVE_PER_WORKFLOW: ${FLOWFORGE_EXECUTION_MAX_ACTIVE_PER_WORKFLOW:-10}
+      FLOWFORGE_WEBHOOKS_ALLOW_UNAUTHENTICATED: ${FLOWFORGE_WEBHOOKS_ALLOW_UNAUTHENTICATED:-false}
+      FLOWFORGE_SCHEDULER_ENABLED: ${FLOWFORGE_SCHEDULER_ENABLED:-true}
+      # Credential encryption keyring "keyId:base64Key[,...]" (32-byte keys). Kept in infra/.env, never in the repository
+      # or the database; without it credentials are disabled.
+      FLOWFORGE_CREDENTIALS_KEYS: ${FLOWFORGE_CREDENTIALS_KEYS:-}
+      FLOWFORGE_CREDENTIALS_ACTIVE_KEY_ID: ${FLOWFORGE_CREDENTIALS_ACTIVE_KEY_ID:-}
+      # Host names the backend answers to (DNS rebinding protection); nginx forwards the browser's host name.
+      FLOWFORGE_ALLOWED_HOST_NAMES: ${FLOWFORGE_ALLOWED_HOST_NAMES:-localhost,127.0.0.1,[::1]}
+    ports:
+      - "127.0.0.1:${BACKEND_PORT:-8080}:8080"
+    healthcheck:
+      test: ["CMD", "wget", "-q", "-O", "/dev/null", "http://127.0.0.1:8080/actuator/health/readiness"]
+      interval: 10s
+      timeout: 3s
+      retries: 12
+      start_period: 30s
+
+  frontend:
+    logging: *logging
+    profiles: ["app"]
+    build:
+      context: ../frontend
+    restart: unless-stopped
+    depends_on:
+      backend:
+        condition: service_healthy
+    ports:
+      - "127.0.0.1:${FRONTEND_PORT:-5173}:80"
+    healthcheck:
+      test: ["CMD", "wget", "-q", "-O", "/dev/null", "http://127.0.0.1:80/"]
+      interval: 10s
+      timeout: 3s
+      retries: 6
+
+volumes:
+  flowforge-pgdata:
