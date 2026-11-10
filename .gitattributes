@@ -1,0 +1,4 @@
+# Windows batch files need CRLF; shell scripts need LF (they run inside macOS/Linux shells and containers).
+*.bat text eol=crlf
+*.cmd text eol=crlf
+*.sh text eol=lf

@@ -22,15 +22,24 @@ restarting, and troubleshooting.
 
 Java 21+ (JDK 21 or newer; the build targets release 21), Maven 3.9+ (or use `./mvnw`), Node 22+ and npm, Docker with Compose v2.
 
-## Quickest start (macOS): one command
+## Quickest start: one command
+
+macOS:
 
 ```bash
 ./start-flowforge.sh
 ```
 
+Windows: double-click `start-flowforge.bat` in Explorer, or run it from Command Prompt:
+
+```bat
+start-flowforge.bat
+```
+
 Starts Docker Desktop if needed, creates `infra/.env` with a random password and credential key on first use (an existing one is
 reused), builds and starts the stack, waits until it is healthy and opens <http://localhost:5173> in Google Chrome.
-`./start-flowforge.sh stop` stops it (data is kept); `status` and `logs` show health and the backend log.
+`./start-flowforge.sh stop` (Windows: `start-flowforge.bat stop`) stops it (data is kept); `status` and `logs` show
+health and the backend log. Both scripts need Docker Desktop.
 
 ## Option A: full stack in Docker
 
